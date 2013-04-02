@@ -30,7 +30,7 @@ def threshold_unipolar(a=0.0):
     return lambda x: 0.0 if x < a else 1.0
 
 
-def threshold_bipolar(a):
+def threshold_bipolar(a=0.0):
     """
     Return threshold bipolar activation function.
 

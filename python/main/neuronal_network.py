@@ -3,7 +3,7 @@ __author__ = 'paoolo'
 import activation_function
 
 class Neuron(object):
-    def __init__(self, activation_function=activation_function.linear(1.0), weights_sequence=None):
+    def __init__(self, activation_function=activation_function.linear(1.0), weights_sequence=None, bias=1.0):
         """
         Create simple neuron.
 
@@ -14,6 +14,7 @@ class Neuron(object):
         if not weights_sequence: weights_sequence = [1.0]
         self.activation_function = activation_function
         self.weight_sequence = weights_sequence
+        self.bias = bias
 
     def compute(self, values_sequence=None):
         """
@@ -23,8 +24,20 @@ class Neuron(object):
         input_sequence -- one dimensional sequence of values (default: [1.0])
         """
         if values_sequence is None: values_sequence = [1] * len(self.weight_sequence)
-        summed = sum(map(lambda entry: entry[0] * entry[1], zip(values_sequence, self.weight_sequence)))
+        summed = sum(map(lambda entry: entry[0] * entry[1], zip(values_sequence, self.weight_sequence))) - self.bias
         return self.activation_function(summed)
+
+
+def neuron_and():
+    return Neuron(activation_function.threshold_unipolar(), weights_sequence=[1.0, 1.0], bias=1.5)
+
+
+def neuron_or():
+    return Neuron(activation_function.threshold_unipolar(), weights_sequence=[1.0, 1.0], bias=0.5)
+
+
+def neuron_not():
+    return Neuron(activation_function.threshold_unipolar(), weights_sequence=[-1.0], bias=-0.5)
 
 
 class Layer(object):
