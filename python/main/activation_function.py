@@ -37,7 +37,7 @@ def threshold_bipolar(a=0.0):
     Keyword arguments:
     a -- threshold value (default 0.0)
     """
-    return lambda x: 1.0 if x < a else 1.0
+    return lambda x: -1.0 if x < a else 1.0
 
 
 def sigmoid_unipolar(beta=0.0):
