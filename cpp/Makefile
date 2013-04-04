@@ -1,55 +1,17 @@
-COMPILER=G++
+CXX=g++
+CXXFLAGS=-Wall -Wextra -pedantic-errors -std=c++0x
+LFLAGS=
+OBJS=activation_function.o neuronal_network.o
 
-C = c
-OUTPUT_PATH = out/production/cpp/
-SOURCE_PATH = src/
-EXE = $(OUTPUT_PATH)main.out
+all: main.out
 
-ifeq ($(COMPILER), G++)
-  ifeq ($(OS),Windows_NT)
-    OBJ = obj
-  else
-    OBJ = o
-  endif
-  COPT = -O2
-  CCMD = g++
-  OBJFLAG = -o
-  EXEFLAG = -o
-# INCLUDES = -I../.includes
-  INCLUDES =
-# LIBS = -lgc
-  LIBS =
-# LIBPATH = -L../gc/.libs
-  LIBPATH =
-  CPPFLAGS = $(COPT) -g $(INCLUDES)
-  LDFLAGS = $(LIBPATH) -g $(LIBS)
-  DEP = dep
-else
-  OBJ = obj
-  COPT = /O2
-  CCMD = cl
-  OBJFLAG = /Fo
-  EXEFLAG = /Fe
-# INCLUDES = /I..\\.includes
-  INCLUDES =
-# LIBS = ..\\.libs\\libgc.lib
-  LIBS =
-  CPPFLAGS = $(COPT) /DEBUG $(INCLUDES)
-  LDFLAGS = /DEBUG
-endif
+main.out:
+	$(CXX) $(CXXFLAGS) $(LFLAGS) src/main.cpp src/activation_function.cpp src/neuronal_network.cpp -o $@
 
-OBJS := $(patsubst %.$(C),%.$(OBJ),$(wildcard $(SOURCE_PATH)*.$(C)))
-
-%.$(OBJ):%.$(C)
-	@echo Compiling $(basename $<)...
-	$(CCMD) -c $(CPPFLAGS) $(CXXFLAGS) $< $(OBJFLAG)$@
-
-all: $(OBJS)
-	@echo Linking...
-	$(CCMD) $(LDFLAGS) $^ $(LIBS) $(EXEFLAG) $(EXE)
+$(OBJS): %.o: src/%.cpp
+	$(CXX) -c $(CXXFLAGS) $< -o $@
 
 clean:
-	rm -rf $(SOURCE_PATH)*.$(OBJ) $(EXE)
+	rm -f *.o
 
-rebuild: clean all
-#rebuild is not entirely correct
+.PHONY: all clean
