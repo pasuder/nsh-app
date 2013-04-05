@@ -3,6 +3,8 @@ import neuronal_network
 
 __author__ = 'paoolo'
 
+import sys
+
 
 def quick_test():
     neurons = [neuronal_network.neuron_and(), neuronal_network.neuron_or()]
