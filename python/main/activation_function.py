@@ -16,7 +16,7 @@ class ActiveFunc():
         return self.name if self.desc is None else self.desc
 
 
-def linear(a, b=0.0):
+def linear(a=1.0, b=0.0):
     """
     Return linear activation function.
 
@@ -83,7 +83,7 @@ def sigmoid_bipolar(beta=0.0):
     return ActiveFunc(func, 'sigmoid_bipolar', 'Sigmoid bipolar activation function')
 
 
-def gauss(a, b, c):
+def gauss(a=1.0, b=1.0, c=1.0):
     """
     Return Gauss activation function. Arguments must be greater than zero.
 
