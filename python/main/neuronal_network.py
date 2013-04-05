@@ -1,9 +1,20 @@
 __author__ = 'paoolo'
 
+import re
+
 import activation_function
 
+
+def pretty_print(inner_func):
+    def func(*args, **kwargs):
+        content = re.split(r'\n', inner_func(*args, **kwargs))
+        return reduce(lambda acc, line: acc + '\n\t' + line, content[1:], '\t' + content[0])
+
+    return func
+
+
 class Neuron(object):
-    def __init__(self, activation_function=activation_function.linear(1.0), weights_sequence=None, bias=1.0):
+    def __init__(self, active_func=activation_function.linear(1.0), weights=None, bias=1.0):
         """
         Create simple neuron.
 
@@ -11,9 +22,10 @@ class Neuron(object):
         activation_function -- one argument function used to compute activation value (default: activation_function.linear(1.0))
         weights_sequence -- one dimensional sequence of weight values (default: [1.0])
         """
-        if not weights_sequence: weights_sequence = [1.0]
-        self.activation_function = activation_function
-        self.weight_sequence = weights_sequence
+        if not weights:
+            weights = [1.0]
+        self.active_func = active_func
+        self.weights = weights
         self.bias = bias
 
     def compute(self, values_sequence=None):
@@ -23,21 +35,25 @@ class Neuron(object):
         Keyword arguments:
         input_sequence -- one dimensional sequence of values (default: [1.0])
         """
-        if values_sequence is None: values_sequence = [1] * len(self.weight_sequence)
-        summed = sum(map(lambda entry: entry[0] * entry[1], zip(values_sequence, self.weight_sequence))) - self.bias
-        return self.activation_function(summed)
+        if values_sequence is None:
+            values_sequence = [1] * len(self.weights)
+        summed = sum(map(lambda entry: entry[0] * entry[1], zip(values_sequence, self.weights))) - self.bias
+        return self.active_func(summed)
+
+    def __str__(self):
+        return 'Neuron(' + str(self.active_func) + ', weights=' + str(self.weights) + ', bias=' + str(self.bias) + ')'
 
 
 def neuron_and():
-    return Neuron(activation_function.threshold_unipolar(), weights_sequence=[1.0, 1.0], bias=1.5)
+    return Neuron(activation_function.threshold_unipolar(), weights=[1.0, 1.0], bias=1.5)
 
 
 def neuron_or():
-    return Neuron(activation_function.threshold_unipolar(), weights_sequence=[1.0, 1.0], bias=0.5)
+    return Neuron(activation_function.threshold_unipolar(), weights=[1.0, 1.0], bias=0.5)
 
 
 def neuron_not():
-    return Neuron(activation_function.threshold_unipolar(), weights_sequence=[-1.0], bias=-0.5)
+    return Neuron(activation_function.threshold_unipolar(), weights=[-1.0], bias=-0.5)
 
 
 class Layer(object):
@@ -59,6 +75,10 @@ class Layer(object):
         input_sequence -- one dimensional sequence of values (default: [1.0])
         """
         return map(lambda n: n.compute(values_sequence), self.neurons_sequence)
+
+    @pretty_print
+    def __str__(self):
+        return 'Layer[' + reduce(lambda acc, n: acc + '\n\t' + str(n), self.neurons_sequence, '') + '\n]'
 
 
 class Network(object):
@@ -82,3 +102,6 @@ class Network(object):
         for layer in self.layers_sequence:
             values_sequence = layer.compute(values_sequence)
         return values_sequence
+
+    def __str__(self):
+        return 'Network{' + reduce(lambda acc, l: acc + '\n' + str(l), self.layers_sequence, '') + '\n}'
