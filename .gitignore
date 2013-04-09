@@ -5,6 +5,8 @@
 .idea/
 *.iml
 
+cpp/nbproject/
+
 *.py[cod]
 
 # C extensions
