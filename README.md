@@ -10,7 +10,7 @@ Neural network app with shell and batch processing mode.
 
 1.  Download this as zip or by cloning repo
 2.  Extract archive (if you have downloaded) and change directory
-3.  Type ``$ ./main.py``
+3.  Type ``$ $(PROJECT_ROOT)/python/main.py`` or double-click on file ``main.py`` in ``$(PROJECT_ROOT)/main/``
 4.  Prompt shell will be shown
 
 If you want to use batch processing mode, type ``$ ./main.py -f path/to/file``.
