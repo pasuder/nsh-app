@@ -23,6 +23,7 @@ Available modes:
 *   batch processing mode
 
 Available activation function (``FUNC``):
+
 *   ``linear``
 *   ``linear_cut``
 *   ``threshold_unipolar``
