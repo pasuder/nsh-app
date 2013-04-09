@@ -13,13 +13,24 @@ def pretty_print(inner_func):
     return func
 
 
+def normalize(inner_func):
+    def func(values_sequence):
+        minimum, maximum = min(values_sequence), max(values_sequence)
+        diff = maximum - minimum
+        result_sequence = inner_func(map(lambda val: (val - minimum) / diff, values_sequence))
+        return map(lambda val: (val * diff) + minimum, result_sequence)
+
+    return func
+
+
 class Neuron(object):
     def __init__(self, active_func=activation_function.linear(1.0), weights=None, bias=1.0):
         """
         Create simple neuron.
 
         Keyword arguments:
-        activation_function -- one argument function used to compute activation value (default: activation_function.linear(1.0))
+        activation_function -- one argument function used to compute activation value
+                               (default: activation_function.linear(1.0))
         weights_sequence -- one dimensional sequence of weight values (default: [1.0])
         """
         if not weights:
@@ -64,7 +75,8 @@ class Layer(object):
         Keyword arguments:
         neurons_sequence -- one dimensional sequence of neurons
         """
-        if not neurons_sequence: neurons_sequence = [Neuron()]
+        if not neurons_sequence:
+            neurons_sequence = [Neuron()]
         self.neurons_sequence = neurons_sequence
 
     def compute(self, values_sequence=None):
@@ -89,7 +101,8 @@ class Network(object):
         Keyword arguments:
         layers_sequence -- one dimensional sequence of neuronal layers
         """
-        if not layers_sequence: layers_sequence = [Layer()]
+        if not layers_sequence:
+            layers_sequence = [Layer()]
         self.layers_sequence = layers_sequence
 
     def compute(self, values_sequence=None):

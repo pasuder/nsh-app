@@ -1,0 +1,21 @@
+neuron  and             threshold_unipolar   2.8147  1.9058   3.7460
+
+
+neuron  xor_hidden_1    sigmoid_bipolar      0.7827  0.7725   0.3666
+neuron  xor_hidden_2    sigmoid_bipolar      1.4412  1.3907  -1.5368
+neuron  xor_output_1    linear              -1.2556  1.3087   0.8297
+
+layer   hidden  xor_hidden_1 xor_hidden_2
+layer   output  xor_output_1
+
+network xor     hidden output
+
+
+compute and 0.0 0.0
+compute and 1.0 0.0
+compute and 0.0 1.0
+compute and 1.0 1.0
+compute xor 0.0 0.0
+compute xor 1.0 0.0
+compute xor 0.0 1.0
+compute xor 1.0 1.0

@@ -2,29 +2,12 @@
 
 __author__ = 'paoolo'
 
+import getopt
 import sys
 import re
 
 import neuronal_network
 import activation_function
-
-
-def quick_test():
-    neurons = [neuronal_network.neuron_and(), neuronal_network.neuron_or()]
-    for neuron in neurons:
-        for val in [(0., 0.), (1., 0.), (0., 1.), (1., 1.)]:
-            print neuron.compute(val)
-    neuron = neuronal_network.neuron_not()
-    for val in [0, 1]:
-        print neuron.compute([val])
-
-    print neuron
-
-    layer = neuronal_network.Layer([neuron])
-    print layer
-
-    network = neuronal_network.Network([layer])
-    print network
 
 
 active_func = {'linear': activation_function.linear,
@@ -49,11 +32,15 @@ LAYERS = 'layers'
 NETWORKS = 'networks'
 
 
-def parse_line(line, env):
+def normalize(line):
+    return re.split(r'\s', re.sub(r'\s+', ' ', re.sub(r'^\s+', '', re.sub(r'\s+$', '', line))))
+
+
+def parse_shell_line(line, env):
     """
     Parse prompt line.
 
-    Variable:
+    Neuron variables:
     FUNC
         : linear
         : linear_cut
@@ -63,9 +50,11 @@ def parse_line(line, env):
         : sigmoid_bipolar
         : gauss
     WEIGHTS
-        : 1.0 1.0
+        : 1.0 1.0 ...
     BIAS
         : 1.0
+    INPUTS
+        : 1.0 1.0 ...
 
     Command:
     * new
@@ -75,26 +64,14 @@ def parse_line(line, env):
             NAME neurons...
         network
             NAME layers...
-    * show
-        neuron
-            NAME
-        layer
-            NAME
-        network
-            NAME
-    * compute
-        neuron
-            NAME INPUTS
-        layer
-            NAME INPUTS
-        network
-            NAME INPUTS
+    * show NAME
+    * compute NAME INPUTS
 
     Keyword arguments:
     line -- line read from keyboard
     context -- shell context, env variables
     """
-    line = re.split(r'\s', re.sub(r'\s+', ' ', re.sub(r'^\s+', '', re.sub(r'\s+$', '', line))))
+    line = normalize(line)
 
     if re.match(NEW, line[0]):
         if len(line) < 2:
@@ -104,7 +81,13 @@ def parse_line(line, env):
             if re.match(NEURON, line[1]):
                 if len(line) < 6:
                     print 'Usage: new neuron NAME FUNC WEIGHTS BIAS\n\t' \
-                          'FUNC\t: [linear|linear_cut|threshold_unipolar|threshold_bipolar|sigmoid_unipolar|sigmoid_bipolar|gauss]\n\t' \
+                          'FUNC\t: [linear|' \
+                          'linear_cut|' \
+                          'threshold_unipolar|' \
+                          'threshold_bipolar|' \
+                          'sigmoid_unipolar|' \
+                          'sigmoid_bipolar|' \
+                          'gauss]\n\t' \
                           'WEIGHTS\t: 1.0 1.2 ...\n\t' \
                           'BIAS\t: 1.0'
 
@@ -115,7 +98,7 @@ def parse_line(line, env):
                     bias = float(line[-1])
 
                     neuron = neuronal_network.Neuron(func, weights, bias)
-                    env[NEURONS][name] = neuron
+                    env[name] = neuron
 
             elif re.match(LAYER, line[1]):
                 if len(line) < 4:
@@ -123,10 +106,10 @@ def parse_line(line, env):
 
                 else:
                     name = line[2]
-                    neurons = map(lambda n: env[NEURONS][n], line[3:])
+                    neurons = map(lambda n: env[n], line[3:])
 
                     layer = neuronal_network.Layer(neurons)
-                    env[LAYERS][name] = layer
+                    env[name] = layer
 
             elif re.match(NETWORK, line[1]):
                 if len(line) < 4:
@@ -134,42 +117,24 @@ def parse_line(line, env):
 
                 else:
                     name = line[2]
-                    layers = map(lambda l: env[LAYERS][l], line[3:])
+                    layers = map(lambda l: env[l], line[3:])
 
                     network = neuronal_network.Network(layers)
-                    env[NETWORKS][name] = network
+                    env[name] = network
 
     elif re.match(SHOW, line[0]):
-        if len(line) < 3:
-            print 'Usage: show [neuron|layer|network] NAME'
+        if len(line) < 2:
+            print 'Usage: show NAME'
 
         else:
-            if re.match(NEURON, line[1]):
-                print env[NEURONS][line[2]]
-
-            elif re.match(LAYER, line[1]):
-                print env[LAYERS][line[2]]
-
-            elif re.match(NETWORK, line[1]):
-                print env[NETWORKS][line[2]]
+            print env[line[1]]
 
     elif re.match(COMPUTE, line[0]):
-        if len(line) < 4:
-            print 'Usage: compute [neuron|layer|network] NAME INPUTS\n\tINPUTS\t: 1.0 1.0 ...'
+        if len(line) < 3:
+            print 'Usage: compute NAME INPUTS\n\tINPUTS\t: 1.0 1.0 ...'
 
         else:
-            compute = lambda x: 'Ups!'
-            if re.match(NEURON, line[1]):
-                compute = env[NEURONS][line[2]]
-
-            elif re.match(LAYER, line[1]):
-                compute = env[LAYERS][line[2]]
-
-            elif re.match(NETWORK, line[1]):
-                compute = env[NETWORKS][line[2]]
-
-            values = map(lambda i: float(i), line[3:])
-            print compute.compute(values)
+            print env[line[1]].compute(map(lambda i: float(i), line[2:]))
 
 
 def shell():
@@ -182,7 +147,7 @@ def shell():
         sys.stdout.write('nsh> ')
         line = sys.stdin.readline()
         while line is not None:
-            parse_line(line, env)
+            parse_shell_line(line, env)
             sys.stdout.write('nsh> ')
             line = sys.stdin.readline()
     except KeyboardInterrupt:
@@ -190,6 +155,101 @@ def shell():
     print 'Bye!'
 
 
+def parse_batch_line(line, env):
+    """
+    Neuron variables:
+        Activation function (FUNC):
+            : linear
+            : linear_cut
+            : threshold_unipolar
+            : threshold_bipolar
+            : sigmoid_unipolar
+            : sigmoid_bipolar
+            : gauss
+        Neuron weights (WEIGHTS):
+            : 1.0 1.0 ...
+        Bias (BIAS):
+            : 1.0 ...
+    Computation variables:
+        Inputs (INPUTS):
+            : 1.0 1.0 ...
+
+    Example:
+
+    $
+    neuron NAME FUNC WEIGHTS BIAS
+    layer NAME NEURONS
+    network NAME LAYERS
+
+    compute NAME INPUTS
+    ^@
+
+    """
+    pass
+
+
+def batch(source):
+    """
+    Parse file and compute.
+
+    Keyword arguments:
+    source -- opened file with data
+    """
+    i = 0
+    env = {}
+    for line in source:
+        line = normalize(line)
+        try:
+            if re.match(NEURON, line[0]):
+                name = line[1]
+                func = active_func[line[2]]()
+                weights = map(lambda w: float(w), line[3:-1])
+                bias = float(line[-1])
+                env[name] = neuronal_network.Neuron(func, weights, bias)
+
+            elif re.match(LAYER, line[0]):
+                name = line[1]
+                neurons = map(lambda n: env[n], line[2:])
+                env[name] = neuronal_network.Layer(neurons)
+
+            elif re.match(NETWORK, line[0]):
+                name = line[1]
+                layers = map(lambda l: env[l], line[2:])
+                env[name] = neuronal_network.Network(layers)
+
+            elif re.match(COMPUTE, line[0]):
+                name = line[1]
+                inputs = map(lambda i: float(i), line[2:])
+                print env[name].compute(inputs)
+
+            i += 1
+        except IndexError:
+            print 'Line ' + str(i) + ' is not well formatted. Parsed line "' + ' '.join(line) + '"'
+
+
+def usage():
+    print "Usage:\n" \
+          "-h --help\tprint this help\n" \
+          "-f --file\tselect input file"
+
+
 if __name__ == '__main__':
-    quick_test()
-    shell()
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "hf:", ["help", "file="])
+
+        source = None
+        for o, a in opts:
+            if o in ("-h", "--help"):
+                usage()
+                sys.exit()
+            elif o in ("-f", "--file"):
+                source = open(a)
+            else:
+                assert False, "unhandled option"
+        if source is None:
+            shell()
+        else:
+            batch(source)
+    except getopt.GetoptError as err:
+        print str(err)
+        sys.exit(1)

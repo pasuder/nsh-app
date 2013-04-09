@@ -68,7 +68,7 @@ def sigmoid_unipolar(beta=0.0):
                       'Sigmoid unipolar activation function')
 
 
-def sigmoid_bipolar(beta=0.0):
+def sigmoid_bipolar(beta=1.0):
     """
     Return sigmoid bipolar activation function.
 
