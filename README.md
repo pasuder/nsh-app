@@ -44,6 +44,7 @@ Available commands:
 *   ``new network NAME LAYERS...``
 *   ``show NAME``
 *   ``compute NAME INPUTS``
+*   ``load FILE``
 
 ##### Batch processing mode
 
