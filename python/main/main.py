@@ -22,6 +22,7 @@ NEW = r'new'
 NEURON = r'neuron'
 LAYER = r'layer'
 NETWORK = r'network'
+LOAD = r'load'
 
 SHOW = r'show'
 COMPUTE = r'compute'
@@ -66,6 +67,7 @@ def parse_shell_line(line, env):
             NAME layers...
     * show NAME
     * compute NAME INPUTS
+    * load FILE
 
     Keyword arguments:
     line -- line read from keyboard
@@ -135,6 +137,16 @@ def parse_shell_line(line, env):
 
         else:
             print env[line[1]].compute(map(lambda i: float(i), line[2:]))
+
+    elif re.match(LOAD, line[0]):
+        if len(line) < 2:
+            print 'Usage: load FILE'
+
+        else:
+            try:
+                batch(file(line[1]))
+            except:
+                print 'Ups!'
 
 
 def shell():
