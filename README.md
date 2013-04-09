@@ -2,51 +2,53 @@
 
 Neural network app with shell and batch processing mode.
 
-## What I need to have?
+### What I need to have?
 
 *   python
 
-## How to run?
+### How to run?
 
 1.  Download this as zip or by cloning repo
-2.  Extract *.zip (if you have downloaded) and change directory
-3.  Type
-    <code>$ ./main.py</code>
+2.  Extract archive (if you have downloaded) and change directory
+3.  Type ``$ ./main.py``
 4.  Prompt shell will be shown
 
-## How to use?
+If you want to use batch processing mode, type ``$ ./main.py -f path/to/file``.
 
-You can use this software in:
+### How to use?
+
+Available modes:
 
 *   shell mode
 *   batch processing mode
 
-Available activation function (FUNC):
-*   linear
-*   linear_cut
-*   threshold_unipolar
-*   threshold_bipolar
-*   sigmoid_unipolar
-*   sigmoid_bipolar
-*   gauss
+Available activation function (``FUNC``):
+*   ``linear``
+*   ``linear_cut``
+*   ``threshold_unipolar``
+*   ``threshold_bipolar``
+*   ``sigmoid_unipolar``
+*   ``sigmoid_bipolar``
+*   ``gauss``
 
-Weights (WEIGHTS) and inputs (INPUTS) must look like: <code>1.0 1.0 1.0<code>.
+Weights (``WEIGHTS``) and inputs (``INPUTS``) must a one dimensional float sequence: ``1.0 1.0 1.0``.
+Bias (``BIAS``) must be a single float value: ``1.0``.
 
-### Shell mode
+##### Shell mode
 
 Available commands:
 
-*   new neuron NAME FUNC WEIGHTS... BIAS
-*   new layer NAME NEURONS...
-*   new network NAME LAYERS...
-*   show NAME
-*   compute NAME INPUTS
+*   ``new neuron NAME FUNC WEIGHTS... BIAS``
+*   ``new layer NAME NEURONS...``
+*   ``new network NAME LAYERS...``
+*   ``show NAME``
+*   ``compute NAME INPUTS``
 
-### Batch processing mode
+##### Batch processing mode
 
 Available options:
 
-*   neuron NAME FUNC WEIGHTS... BIAS
-*   layer NAME NEURONS...
-*   network NAME LAYERS...
-*   compute NAME INPUTS
+*   ``neuron NAME FUNC WEIGHTS... BIAS``
+*   ``layer NAME NEURONS...``
+*   ``network NAME LAYERS...``
+*   ``compute NAME INPUTS``
