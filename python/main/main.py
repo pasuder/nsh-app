@@ -1,4 +1,6 @@
 #!/usr/bin/python
+from core import activationfunction as func
+from core import neuralnetwork as net
 
 __author__ = 'paoolo'
 
@@ -6,17 +8,14 @@ import getopt
 import sys
 import re
 
-import neuronal_network
-import activation_function
 
-
-active_func = {'linear': activation_function.linear,
-               'linear_cut': activation_function.linear_cut,
-               'threshold_unipolar': activation_function.threshold_unipolar,
-               'threshold_bipolar': activation_function.threshold_unipolar,
-               'sigmoid_unipolar': activation_function.sigmoid_unipolar,
-               'sigmoid_bipolar': activation_function.sigmoid_bipolar,
-               'gauss': activation_function.gauss}
+active_func = {'linear': func.linear,
+               'linear_cut': func.linear_cut,
+               'threshold_unipolar': func.threshold_unipolar,
+               'threshold_bipolar': func.threshold_unipolar,
+               'sigmoid_unipolar': func.sigmoid_unipolar,
+               'sigmoid_bipolar': func.sigmoid_bipolar,
+               'gauss': func.gauss}
 
 NEW = r'new'
 NEURON = r'neuron'
@@ -97,7 +96,7 @@ def parse_shell_line(line, env):
                     weights = map(lambda w: float(w), line[4:-1])
                     bias = float(line[-1])
 
-                    neuron = neuronal_network.Neuron(func, weights, bias)
+                    neuron = net.Neuron(func, weights, bias)
                     env[name] = neuron
 
             elif re.match(LAYER, line[1]):
@@ -108,7 +107,7 @@ def parse_shell_line(line, env):
                     name = line[2]
                     neurons = map(lambda n: env[n], line[3:])
 
-                    layer = neuronal_network.Layer(neurons)
+                    layer = net.Layer(neurons)
                     env[name] = layer
 
             elif re.match(NETWORK, line[1]):
@@ -119,7 +118,7 @@ def parse_shell_line(line, env):
                     name = line[2]
                     layers = map(lambda l: env[l], line[3:])
 
-                    network = neuronal_network.Network(layers)
+                    network = net.Network(layers)
                     env[name] = network
 
     elif re.match(SHOW, line[0]):
@@ -205,17 +204,17 @@ def batch(source):
                 func = active_func[line[2]]()
                 weights = map(lambda w: float(w), line[3:-1])
                 bias = float(line[-1])
-                env[name] = neuronal_network.Neuron(func, weights, bias)
+                env[name] = net.Neuron(func, weights, bias)
 
             elif re.match(LAYER, line[0]):
                 name = line[1]
                 neurons = map(lambda n: env[n], line[2:])
-                env[name] = neuronal_network.Layer(neurons)
+                env[name] = net.Layer(neurons)
 
             elif re.match(NETWORK, line[0]):
                 name = line[1]
                 layers = map(lambda l: env[l], line[2:])
-                env[name] = neuronal_network.Network(layers)
+                env[name] = net.Network(layers)
 
             elif re.match(COMPUTE, line[0]):
                 name = line[1]

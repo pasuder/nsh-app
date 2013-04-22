@@ -3,7 +3,7 @@ __author__ = 'paoolo'
 import math
 
 
-class ActiveFunc():
+class ActivationFunction():
     def __init__(self, func, name, desc=None):
         self.func = func
         self.name = name
@@ -24,14 +24,14 @@ def linear(a=1.0, b=0.0):
     a -- linear factor
     b -- linear shift (default 0.0)
     """
-    return ActiveFunc(lambda x: a * x + b, 'linear', 'Linear activation function')
+    return ActivationFunction(lambda x: a * x + b, 'linear', 'Linear activation function')
 
 
 def linear_cut():
     """
     Return partially linear activation function.
     """
-    return ActiveFunc(lambda x: -1.0 if x < -1.0 else (1.0 if x > 1.0 else x), 'linear_cut',
+    return ActivationFunction(lambda x: -1.0 if x < -1.0 else (1.0 if x > 1.0 else x), 'linear_cut',
                       'Partially linear activation function')
 
 
@@ -42,7 +42,7 @@ def threshold_unipolar(a=0.0):
     Keyword arguments:
     a -- threshold value (default 0.0)
     """
-    return ActiveFunc(lambda x: 0.0 if x < a else 1.0, 'threshold_unipolar',
+    return ActivationFunction(lambda x: 0.0 if x < a else 1.0, 'threshold_unipolar',
                       'Threshold unipolar activation function')
 
 
@@ -53,7 +53,7 @@ def threshold_bipolar(a=0.0):
     Keyword arguments:
     a -- threshold value (default 0.0)
     """
-    return ActiveFunc(lambda x: -1.0 if x < a else 1.0, 'threshold_bipolar',
+    return ActivationFunction(lambda x: -1.0 if x < a else 1.0, 'threshold_bipolar',
                       'Threshold bipolar activation function')
 
 
@@ -64,7 +64,7 @@ def sigmoid_unipolar(beta=0.0):
     Keyword arguments:
     beta -- epsilon factor value, mostly in range (0, 1] (default 0.0)
     """
-    return ActiveFunc(lambda x: 1.0 / (1.0 + math.pow(math.e, -beta * x)), 'sigmoid_unipolar',
+    return ActivationFunction(lambda x: 1.0 / (1.0 + math.pow(math.e, -beta * x)), 'sigmoid_unipolar',
                       'Sigmoid unipolar activation function')
 
 
@@ -80,7 +80,7 @@ def sigmoid_bipolar(beta=1.0):
         val = math.pow(math.e, -beta * x)
         return (1.0 - val) / (1.0 + val)
 
-    return ActiveFunc(func, 'sigmoid_bipolar', 'Sigmoid bipolar activation function')
+    return ActivationFunction(func, 'sigmoid_bipolar', 'Sigmoid bipolar activation function')
 
 
 def gauss(a=1.0, b=1.0, c=1.0):
@@ -93,5 +93,5 @@ def gauss(a=1.0, b=1.0, c=1.0):
     c -- divided part
     """
     div = 2.0 * math.pow(c, 2)
-    return ActiveFunc(lambda x: a * math.e - (math.pow(x - b, 2) / div), 'gauss',
+    return ActivationFunction(lambda x: a * math.e - (math.pow(x - b, 2) / div), 'gauss',
                       'Gauss activation function')

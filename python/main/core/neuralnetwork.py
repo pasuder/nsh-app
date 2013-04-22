@@ -1,30 +1,11 @@
 __author__ = 'paoolo'
 
-import re
-
-import activation_function
-
-
-def pretty_print(inner_func):
-    def func(*args, **kwargs):
-        content = re.split(r'\n', inner_func(*args, **kwargs))
-        return reduce(lambda acc, line: acc + '\n\t' + line, content[1:], '\t' + content[0])
-
-    return func
-
-
-def normalize(inner_func):
-    def func(values_sequence):
-        minimum, maximum = min(values_sequence), max(values_sequence)
-        diff = maximum - minimum
-        result_sequence = inner_func(map(lambda val: (val - minimum) / diff, values_sequence))
-        return map(lambda val: (val * diff) + minimum, result_sequence)
-
-    return func
+import activationfunction as func
+import decorators as deco
 
 
 class Neuron(object):
-    def __init__(self, active_func=activation_function.linear(1.0), weights=None, bias=1.0):
+    def __init__(self, active_func=func.linear(1.0), weights=None, bias=1.0):
         """
         Create simple neuron.
 
@@ -55,18 +36,6 @@ class Neuron(object):
         return 'Neuron(' + str(self.active_func) + ', weights=' + str(self.weights) + ', bias=' + str(self.bias) + ')'
 
 
-def neuron_and():
-    return Neuron(activation_function.threshold_unipolar(), weights=[1.0, 1.0], bias=1.5)
-
-
-def neuron_or():
-    return Neuron(activation_function.threshold_unipolar(), weights=[1.0, 1.0], bias=0.5)
-
-
-def neuron_not():
-    return Neuron(activation_function.threshold_unipolar(), weights=[-1.0], bias=-0.5)
-
-
 class Layer(object):
     def __init__(self, neurons_sequence=None):
         """
@@ -88,7 +57,7 @@ class Layer(object):
         """
         return map(lambda n: n.compute(values_sequence), self.neurons_sequence)
 
-    @pretty_print
+    @deco.pretty_print
     def __str__(self):
         return 'Layer[' + reduce(lambda acc, n: acc + '\n\t' + str(n), self.neurons_sequence, '') + '\n]'
 
