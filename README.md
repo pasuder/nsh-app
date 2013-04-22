@@ -2,6 +2,9 @@
 
 Neural network app with shell and batch processing mode.
 
+[![Master Build Status](https://travis-ci.org/paoolo/neurony-main.png?branch=master)](https://travis-ci.org/paoolo/neurony-main)
+[![Devel Build Status](https://travis-ci.org/paoolo/neurony-main.png?branch=devel)](https://travis-ci.org/paoolo/neurony-main)
+
 ### What I need to have?
 
 *   python
