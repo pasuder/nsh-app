@@ -24,17 +24,22 @@ NEURON = r'neuron'
 LAYER = r'layer'
 NETWORK = r'network'
 
-SHOW = r'show'
 COMPUTE = r'compute'
-CHANGE = r'change'
-
-NEURONS = 'neurons'
-LAYERS = 'layers'
-NETWORKS = 'networks'
+LIST = r'list'
+SHOW = r'show'
+INIT = r'init'
+ZERO = r'zero'
+LOAD = r'load'
+LOCATE = r'locate'
 
 
 def normalize(line):
     return re.split(r'\s', re.sub(r'\s+', ' ', re.sub(r'^\s+', '', re.sub(r'\s+$', '', line))))
+
+
+def first_index(what, sequence):
+    return reduce(lambda t, w: (t[0], True) if not t[1] and w == what else (
+        t[0] + 1 if not t[1] else t[0], t[1]), sequence, (0, False))[0]
 
 
 def parse_shell_line(line, env):
@@ -56,17 +61,23 @@ def parse_shell_line(line, env):
         : 1.0
     INPUTS
         : 1.0 1.0 ...
+    LOCATION
+        : 1.0 1.0 ...
 
     Command:
     * new
         neuron
-            NAME FUNC WEIGHTS BIAS
+            NAME FUNC WEIGHTS BIAS [location LOCATION]
         layer
             NAME neurons...
         network
             NAME layers...
+    * list
     * show NAME
     * compute NAME INPUTS
+    * init NAME
+    * zero NAME
+    * locate NAME
 
     Keyword arguments:
     line -- line read from keyboard
@@ -81,7 +92,7 @@ def parse_shell_line(line, env):
         else:
             if re.match(NEURON, line[1]):
                 if len(line) < 6:
-                    print 'Usage: new neuron NAME FUNC WEIGHTS BIAS\n\t' \
+                    print 'Usage: new neuron NAME FUNC WEIGHTS BIAS [location LOCATION]\n\t' \
                           'FUNC\t: [linear|' \
                           'linear_cut|' \
                           'threshold_unipolar|' \
@@ -90,15 +101,18 @@ def parse_shell_line(line, env):
                           'sigmoid_bipolar|' \
                           'gauss]\n\t' \
                           'WEIGHTS\t: 1.0 1.2 ...\n\t' \
-                          'BIAS\t: 1.0'
+                          'BIAS\t: 1.0\n\y' \
+                          'LOCATION\t: 1.0 1.0 1.0...'
 
                 else:
                     name = line[2]
                     func = active_func[line[3]]()
-                    weights = map(lambda w: float(w), line[4:-1])
-                    bias = float(line[-1])
+                    location = first_index('location', line)
+                    weights = map(lambda w: float(w), line[4:location - 1])
+                    bias = float(line[location - 1])
+                    location = map(lambda x: float(x), line[location + 1:])
 
-                    neuron = net.Neuron(func, weights, bias)
+                    neuron = net.Neuron(func, weights, bias, location)
                     env[name] = neuron
 
             elif re.match(LAYER, line[1]):
@@ -107,10 +121,13 @@ def parse_shell_line(line, env):
 
                 else:
                     name = line[2]
-                    neurons = map(lambda n: env[n], line[3:])
+                    try:
+                        neurons = map(lambda n: env[n], line[3:])
 
-                    layer = net.Layer(neurons)
-                    env[name] = layer
+                        layer = net.Layer(neurons)
+                        env[name] = layer
+                    except KeyError as e:
+                        print 'Neuron not found: ' + e.message
 
             elif re.match(NETWORK, line[1]):
                 if len(line) < 4:
@@ -118,24 +135,82 @@ def parse_shell_line(line, env):
 
                 else:
                     name = line[2]
-                    layers = map(lambda l: env[l], line[3:])
+                    try:
+                        layers = map(lambda l: env[l], line[3:])
 
-                    network = net.Network(layers)
-                    env[name] = network
+                        network = net.Network(layers)
+                        env[name] = network
+                    except KeyError as e:
+                        print 'Layer not found: ' + e.message
+
+    elif re.match(LIST, line[0]):
+        for k in env:
+            print '\t' + k
 
     elif re.match(SHOW, line[0]):
         if len(line) < 2:
             print 'Usage: show NAME'
 
         else:
-            print env[line[1]]
+            try:
+                print env[line[1]]
+            except KeyError:
+                print 'Name ' + line[1] + ' not found'
 
     elif re.match(COMPUTE, line[0]):
         if len(line) < 3:
             print 'Usage: compute NAME INPUTS\n\tINPUTS\t: 1.0 1.0 ...'
 
         else:
-            print env[line[1]].compute(map(lambda i: float(i), line[2:]))
+            try:
+                print env[line[1]].compute(map(lambda i: float(i), line[2:]))
+            except KeyError:
+                print 'Name ' + line[1] + 'not found'
+
+    elif re.match(INIT, line[0]):
+        if len(line) < 2:
+            print 'Usage: init NAME'
+
+        else:
+            try:
+                env[line[1]].init()
+            except KeyError:
+                print 'Name ' + line[1] + ' not found'
+
+    elif re.match(ZERO, line[0]):
+        if len(line) < 2:
+            print 'Usage: zero NAME'
+
+        else:
+            try:
+                env[line[1]].zero()
+            except KeyError:
+                print 'Name ' + line[1] + ' not found'
+
+    elif re.match(LOAD, line[0]):
+        if len(line) < 2:
+            print 'Usage: load NAME'
+
+        else:
+            env = batch(open(line[1]), env)
+            print 'Loaded.'
+
+    elif re.match(LOCATE, line[0]):
+        if len(line) < 2:
+            print 'Usage: locate NAME LOCATION'
+
+        else:
+            try:
+                env[line[1]].locate(map(lambda x: float(x), line[2:]))
+            except KeyError:
+                print 'Name ' + line[1] + 'not found'
+            except BaseException as e:
+                print 'Cannot set location on ' + line[1] + ': ' + e.message
+
+    else:
+        print 'Usage: new|show|compute|init|zero|load|list|locate'
+
+    return env
 
 
 def shell():
@@ -143,12 +218,12 @@ def shell():
     Enable CLI for application.
     """
     print 'Neuronal shell'
-    env = {NEURONS: {}, LAYERS: {}, NETWORKS: {}}
+    env = {}
     try:
         sys.stdout.write('nsh> ')
         line = sys.stdin.readline()
         while line is not None:
-            parse_shell_line(line, env)
+            env = parse_shell_line(line, env)
             sys.stdout.write('nsh> ')
             line = sys.stdin.readline()
     except KeyboardInterrupt:
@@ -156,76 +231,57 @@ def shell():
     print 'Bye!'
 
 
-def parse_batch_line(line, env):
-    """
-    Neuron variables:
-        Activation function (FUNC):
-            : linear
-            : linear_cut
-            : threshold_unipolar
-            : threshold_bipolar
-            : sigmoid_unipolar
-            : sigmoid_bipolar
-            : gauss
-        Neuron weights (WEIGHTS):
-            : 1.0 1.0 ...
-        Bias (BIAS):
-            : 1.0 ...
-    Computation variables:
-        Inputs (INPUTS):
-            : 1.0 1.0 ...
-
-    Example:
-
-    $
-    neuron NAME FUNC WEIGHTS BIAS
-    layer NAME NEURONS
-    network NAME LAYERS
-
-    compute NAME INPUTS
-    ^@
-
-    """
-    pass
-
-
-def batch(source):
+def batch(source, env=None):
     """
     Parse file and compute.
 
     Keyword arguments:
     source -- opened file with data
     """
+    if not env:
+        env = {}
     i = 0
-    env = {}
     for line in source:
         line = normalize(line)
         try:
             if re.match(NEURON, line[0]):
                 name = line[1]
                 func = active_func[line[2]]()
-                weights = map(lambda w: float(w), line[3:-1])
-                bias = float(line[-1])
-                env[name] = net.Neuron(func, weights, bias)
+                location = first_index('location', line)
+                weights = map(lambda w: float(w), line[3:location - 1])
+                bias = float(line[location - 1])
+                location = map(lambda x: float(x), line[location + 1:])
+                env[name] = net.Neuron(func, weights, bias, location)
 
             elif re.match(LAYER, line[0]):
                 name = line[1]
-                neurons = map(lambda n: env[n], line[2:])
-                env[name] = net.Layer(neurons)
+                try:
+                    neurons = map(lambda n: env[n], line[2:])
+                    env[name] = net.Layer(neurons)
+                except KeyError as e:
+                    print 'Neuron not found: ' + e.message
 
             elif re.match(NETWORK, line[0]):
                 name = line[1]
-                layers = map(lambda l: env[l], line[2:])
-                env[name] = net.Network(layers)
+                try:
+                    layers = map(lambda l: env[l], line[2:])
+                    env[name] = net.Network(layers)
+                except KeyError as e:
+                    print 'Layer not found: ' + e.message
 
             elif re.match(COMPUTE, line[0]):
                 name = line[1]
                 inputs = map(lambda i: float(i), line[2:])
-                print env[name].compute(inputs)
+                try:
+                    print env[name].compute(inputs)
+                except KeyError as e:
+                    print 'Name ' + name + ' not found: ' + e.message
 
             i += 1
-        except IndexError:
-            print 'Line ' + str(i) + ' is not well formatted. Parsed line "' + ' '.join(line) + '"'
+        except IndexError as e:
+            print 'Line ' + str(i) + ' is not well formatted. Parsed line "' + ' '.join(line) + '". ' + e.message
+
+    return env
 
 
 def usage():

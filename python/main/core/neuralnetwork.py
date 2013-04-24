@@ -1,5 +1,6 @@
 __author__ = 'paoolo'
 
+import random
 import function.activation as func
 import decorators as deco
 
@@ -36,7 +37,18 @@ class Neuron(object):
         return self.active_func(summed)
 
     def __str__(self):
-        return 'Neuron(' + str(self.active_func) + ', weights=' + str(self.weights) + ', bias=' + str(self.bias) + ')'
+        return 'Neuron(' + str(self.active_func) + ', weights=' + str(self.weights) + ', bias=' + str(
+            self.bias) + ', location=' + str(self.location) + ')'
+
+    def init(self, min_value=0.0, max_value=1.0):
+        self.weights = [random.random() * (max_value - min_value) + min_value for _ in xrange(len(self.weights))]
+
+    def zero(self):
+        self.weights = [0.0] * len(self.weights)
+        self.bias = 0.0
+
+    def locate(self, location):
+        self.location = location
 
 
 class Layer(object):
@@ -64,6 +76,12 @@ class Layer(object):
     def __str__(self):
         return 'Layer[' + reduce(lambda acc, n: acc + '\n\t' + str(n), self.neurons, '') + '\n]'
 
+    def init(self, min_value=0.0, max_value=1.0):
+        map(lambda neuron: neuron.init(min_value, max_value), self.neurons)
+
+    def zero(self):
+        map(lambda neuron: neuron.zero(), self.neurons)
+
 
 class Network(object):
     def __init__(self, layers=None):
@@ -90,3 +108,9 @@ class Network(object):
 
     def __str__(self):
         return 'Network{' + reduce(lambda acc, l: acc + '\n' + str(l), self.layers, '') + '\n}'
+
+    def init(self, min_value=0.0, max_value=1.0):
+        map(lambda layer: layer.init(min_value, max_value), self.layers)
+
+    def zero(self):
+        map(lambda layer: layer.zero(), self.layers)
