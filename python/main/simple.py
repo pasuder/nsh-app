@@ -1,6 +1,7 @@
+from main.core.function import activation as func
+
 __author__ = 'paoolo'
 
-from core import activationfunction as func
 from core import neuralnetwork as net
 
 

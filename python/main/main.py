@@ -1,12 +1,14 @@
 #!/usr/bin/python
-from core import activationfunction as func
-from core import neuralnetwork as net
+
 
 __author__ = 'paoolo'
 
 import getopt
 import sys
 import re
+
+from core.function import activation as func
+from core import neuralnetwork as net
 
 
 active_func = {'linear': func.linear,
