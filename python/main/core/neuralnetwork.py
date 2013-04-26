@@ -42,6 +42,7 @@ class Neuron(object):
 
     def init(self, min_value=0.0, max_value=1.0):
         self.weights = [random.random() * (max_value - min_value) + min_value for _ in xrange(len(self.weights))]
+        self.bias = random.random() * (max_value - min_value) + min_value
 
     def zero(self):
         self.weights = [0.0] * len(self.weights)
@@ -114,3 +115,6 @@ class Network(object):
 
     def zero(self):
         map(lambda layer: layer.zero(), self.layers)
+
+    def train(self):
+        pass

@@ -11,8 +11,9 @@ def competitive(learning_rate):
     learning_rate -- function to determine learning rate in next iteration
     """
 
-    def func(weights, traits, iteration):
-        return map(lambda obj: obj[1] + learning_rate(iteration) * (obj[0] - obj[1]), zip(traits, weights))
+    def func(neuron, winner, traits, iteration):
+        neuron.weights = map(lambda obj: obj[1] + learning_rate(iteration) * (obj[0] - obj[1]),
+                             zip(traits, neuron.weights))
 
     return func
 

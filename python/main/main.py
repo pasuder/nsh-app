@@ -1,6 +1,5 @@
 #!/usr/bin/python
 
-
 __author__ = 'paoolo'
 
 import getopt
@@ -8,6 +7,7 @@ import sys
 import re
 
 from core.function import activation as func
+from core.training import train
 from core import neuralnetwork as net
 
 
@@ -31,6 +31,8 @@ INIT = r'init'
 ZERO = r'zero'
 LOAD = r'load'
 LOCATE = r'locate'
+TRAIN = r'train'
+KOHONEN = r'kohonen'
 
 
 def normalize(line):
@@ -72,12 +74,15 @@ def parse_shell_line(line, env):
             NAME neurons...
         network
             NAME layers...
+        kohonen
+            NAME DIMENSIONS DIMENSION1 DIMENSION2...
     * list
     * show NAME
     * compute NAME INPUTS
     * init NAME
     * zero NAME
-    * locate NAME
+    * locate NAME LOCATION
+    * train NAME ITERATION
 
     Keyword arguments:
     line -- line read from keyboard
@@ -143,6 +148,15 @@ def parse_shell_line(line, env):
                     except KeyError as e:
                         print 'Layer not found: ' + e.message
 
+            elif re.match(KOHONEN, line[1]):
+                if len(line) < 4:
+                    print 'Usage: new kohonen NAME DIMENSIONS DIMENSION1 DIMENSION2 ...'
+
+                else:
+                    # paoolo TODO make Kohonen network
+                    pass
+
+
     elif re.match(LIST, line[0]):
         for k in env:
             print '\t' + k
@@ -168,14 +182,20 @@ def parse_shell_line(line, env):
                 print 'Name ' + line[1] + 'not found'
 
     elif re.match(INIT, line[0]):
-        if len(line) < 2:
-            print 'Usage: init NAME'
-
-        else:
+        if len(line) == 2:
             try:
                 env[line[1]].init()
             except KeyError:
                 print 'Name ' + line[1] + ' not found'
+
+        elif len(line) == 4:
+            try:
+                env[line[1]].init(float(line[2]), float(line[3]))
+            except KeyError:
+                print 'Name ' + line[1] + ' not found'
+
+        else:
+            print 'Usage: init NAME [MIN MAX]'
 
     elif re.match(ZERO, line[0]):
         if len(line) < 2:
@@ -203,9 +223,25 @@ def parse_shell_line(line, env):
             try:
                 env[line[1]].locate(map(lambda x: float(x), line[2:]))
             except KeyError:
-                print 'Name ' + line[1] + 'not found'
+                print 'Name ' + line[1] + ' not found'
             except BaseException as e:
                 print 'Cannot set location on ' + line[1] + ': ' + e.message
+
+    elif re.match(TRAIN, line[0]):
+        if len(line) == 2:
+            try:
+                train(env[line[1]])
+            except KeyError as e:
+                print 'Name ' + line[1] + ' not found: ' + e.message
+
+        elif len(line) == 3:
+            try:
+                train(env[line[1]], int(line[2]))
+            except KeyError as e:
+                print 'Name ' + line[1] + ' not found: ' + e.message
+
+        else:
+            print 'Usage: train NAME [ITERATION]'
 
     else:
         print 'Usage: new|show|compute|init|zero|load|list|locate'
