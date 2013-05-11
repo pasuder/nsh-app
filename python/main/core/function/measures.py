@@ -7,7 +7,7 @@ def euclidean(obj1, obj2):
     """
     Euclidean measure, used in competitive learning mode.
     """
-    return math.sqrt(sum(map(lambda obj: math.pow(obj[0] - obj[1], 2), zip(obj1, obj2))))
+    return math.sqrt(sum(map(lambda obj: math.pow(obj[0] - obj[1], 2.0), zip(obj1, obj2))))
 
 
 def scalar(obj1, obj2):

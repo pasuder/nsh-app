@@ -11,28 +11,25 @@ class Neuron(object):
         Create simple neuron.
 
         Keyword arguments:
-        activation_function -- one argument function used to compute activation value
-                               (default: activation_function.linear(1.0))
-        weights_sequence -- one dimensional sequence of weight values (default: [1.0])
+        active_func -- one argument function used to compute activation value
+                       (default: activation_function.linear(1.0))
+        weights -- one dimensional sequence of weight values (default: [1.0])
+        bias -- additional value added to computed value
+        location -- used in Kohonen networks
         """
-        if not weights:
-            weights = [1.0]
-        if not location:
-            location = [0.0]
         self.active_func = active_func
-        self.location = location
-        self.weights = weights
-        self.bias = bias
+        self.weights = [1.0] if not weights else map(lambda val: float(val), weights)
+        self.bias = float(bias)
+        self.location = [0] if not location else map(lambda val: int(val), location)
 
     def compute(self, values=None):
         """
         Compute value by neuron.
 
         Keyword arguments:
-        input_sequence -- one dimensional sequence of values (default: [1.0])
+        values -- one dimensional sequence of values (default: [1.0])
         """
-        if values is None:
-            values = [1] * len(self.weights)
+        values = [1] * len(self.weights) if values is None else values
         summed = sum(map(lambda entry: entry[0] * entry[1], zip(values, self.weights))) - self.bias
         return self.active_func(summed)
 
@@ -60,16 +57,14 @@ class Layer(object):
         Keyword arguments:
         neurons_sequence -- one dimensional sequence of neurons
         """
-        if not neurons:
-            neurons = [Neuron()]
-        self.neurons = neurons
+        self.neurons = [Neuron()] if not neurons else neurons
 
     def compute(self, values=None):
         """
         Compute value by neuronal layer.
 
         Keyword arguments:
-        input_sequence -- one dimensional sequence of values (default: [1.0])
+        values -- one dimensional sequence of values (default: [1.0])
         """
         return map(lambda n: n.compute(values), self.neurons)
 
@@ -92,16 +87,14 @@ class Network(object):
         Keyword arguments:
         layers_sequence -- one dimensional sequence of neuronal layers
         """
-        if not layers:
-            layers = [Layer()]
-        self.layers = layers
+        self.layers = [Layer()] if not layers else layers
 
     def compute(self, values=None):
         """
         Compute value by neuronal network.
 
         Keyword arguments:
-        input_sequence -- one dimensional sequence of values (default: [1.0])
+        values -- one dimensional sequence of values (default: [1.0])
         """
         for layer in self.layers:
             values = layer.compute(values)
@@ -115,6 +108,3 @@ class Network(object):
 
     def zero(self):
         map(lambda layer: layer.zero(), self.layers)
-
-    def train(self):
-        pass
