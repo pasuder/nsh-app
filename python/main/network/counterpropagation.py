@@ -1,9 +1,9 @@
-from main.network.network import Layer, Neuron
-from main.trainer import counterpropagation
-
 __author__ = 'paoolo'
 
-from main.network.kohonen import Kohonen
+from kohonen import Kohonen
+from network import Layer, Neuron
+
+from main.trainer import counterpropagation
 
 
 class CounterPropagation(Kohonen):

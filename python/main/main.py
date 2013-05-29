@@ -1,10 +1,9 @@
 #!/usr/bin/python
-from main import interpreter
-
 __author__ = 'paoolo'
 
 import getopt
 import sys
+import interpreter
 
 
 def shell():

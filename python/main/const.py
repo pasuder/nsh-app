@@ -1,4 +1,4 @@
-from main.function import activation, learningrate, neighborhood, measures
+from function import activation, learningrate, neighborhood, measures
 
 __author__ = 'paoolo'
 

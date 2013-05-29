@@ -1,8 +1,8 @@
-from main.tools import function
-
 __author__ = 'paoolo'
 
 import math
+
+from main.tools import function
 
 
 def linear(a=1.0, b=0.0):

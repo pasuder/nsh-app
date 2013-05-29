@@ -1,9 +1,9 @@
-import math
-from main.tools import decorators as deco
-
 __author__ = 'paoolo'
 
 import random
+import math
+
+from main.tools import decorators
 from main.function.activation import linear
 
 
@@ -122,7 +122,7 @@ class Layer(object):
         result = self.compute(traits)
         return map(lambda index: self.neurons[index], [i for i, j in enumerate(result) if j == max(result)])
 
-    @deco.pretty_print
+    @decorators.pretty_print
     def __str__(self):
         return 'Layer[' + reduce(lambda acc, n: acc + '\n\t' + str(n), self.neurons, '') + '\n]'
 

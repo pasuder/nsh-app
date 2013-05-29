@@ -1,11 +1,13 @@
-from main.network.counterpropagation import CounterPropagation
-from main.network.kohonen import Kohonen
-from main.network.network import Neuron, Layer, Network
-
 __author__ = 'paoolo'
 
 import re
-from main.const import activation_func, error_text, info_text, learning_rate_func, measures_func, neighborhood_func, help_text, LEARNING_RATE, MEASUREMENT, NEIGHBORHOOD_RADIUS
+
+from network.network import Neuron, Layer, Network
+from network.kohonen import Kohonen
+from network.counterpropagation import CounterPropagation
+
+from const import activation_func, error_text, info_text, learning_rate_func, measures_func, neighborhood_func, \
+    help_text, LEARNING_RATE, MEASUREMENT, NEIGHBORHOOD_RADIUS
 
 
 def normalize(line):

@@ -1,8 +1,8 @@
-from main.trainer import kohonen
-
 __author__ = 'paoolo'
 
 from network import Network, Layer, Neuron
+
+from main.trainer import kohonen
 
 
 class Kohonen(Network):

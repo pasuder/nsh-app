@@ -1,8 +1,8 @@
-from main.tools import function
-
 __author__ = 'paoolo'
 
 import math
+
+from main.tools import function
 
 
 def linear(max_period=1.0, initial_rate=1.0):
