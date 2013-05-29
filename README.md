@@ -25,34 +25,6 @@ Available modes:
 *   shell mode
 *   batch processing mode
 
-Available activation function (``FUNC``):
+### More info
 
-*   ``linear``
-*   ``linear_cut``
-*   ``threshold_unipolar``
-*   ``threshold_bipolar``
-*   ``sigmoid_unipolar``
-*   ``sigmoid_bipolar``
-*   ``gauss``
-
-Weights (``WEIGHTS``) and inputs (``INPUTS``) must a one dimensional float sequence: ``1.0 1.0 1.0``.
-Bias (``BIAS``) must be a single float value: ``1.0``.
-
-##### Shell mode
-
-Available commands:
-
-*   ``new neuron NAME FUNC WEIGHTS... BIAS``
-*   ``new layer NAME NEURONS...``
-*   ``new network NAME LAYERS...``
-*   ``show NAME``
-*   ``compute NAME INPUTS``
-
-##### Batch processing mode
-
-Available options:
-
-*   ``neuron NAME FUNC WEIGHTS... BIAS``
-*   ``layer NAME NEURONS...``
-*   ``network NAME LAYERS...``
-*   ``compute NAME INPUTS``
+In the future...

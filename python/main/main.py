@@ -1,11 +1,10 @@
 #!/usr/bin/python
+from main import interpreter
 
 __author__ = 'paoolo'
 
 import getopt
 import sys
-
-from core import parser
 
 
 def shell():
@@ -15,7 +14,7 @@ def shell():
         sys.stdout.write('nsh> ')
         line = sys.stdin.readline()
         while line is not None:
-            env = parser.parse(line, env)
+            env = interpreter.parse(line, env)
             sys.stdout.write('nsh> ')
             line = sys.stdin.readline()
     except KeyboardInterrupt:
@@ -27,7 +26,7 @@ def batch(source):
     print 'Neuronal (batch)'
     env = {}
     for line in source:
-        env = parser.parse(line, env)
+        env = interpreter.parse(line, env)
     return env
 
 

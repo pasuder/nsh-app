@@ -1,7 +1,7 @@
 __author__ = 'paoolo'
 
 
-class FunctionWrapper(object):
+class Function(object):
     def __init__(self, func, name, desc=None):
         self.func = func
         self.name = name

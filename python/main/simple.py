@@ -1,8 +1,8 @@
-from main.core.function import activation as func
+from main.function import activation as func
 
 __author__ = 'paoolo'
 
-from core import neuralnetwork as net
+from network import network as net
 
 
 def neuron_and():

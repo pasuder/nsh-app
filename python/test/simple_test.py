@@ -1,21 +1,21 @@
-from main.core import neuralnetwork
-from main.core.function import activation
+from main.network import network
+from main.function import activation
 from main.simple import neuron_not, neuron_or
 
 __author__ = 'paoolo'
 
 
 def neuron_and():
-    return neuralnetwork.Neuron(activation.threshold_unipolar(), [2.8147, 1.9058], 3.7460)
+    return network.Neuron(activation.threshold_unipolar(), [2.8147, 1.9058], 3.7460)
 
 
 def neuron_xor():
-    hidden_neuron1 = neuralnetwork.Neuron(activation.sigmoid_bipolar(), [0.7827, 0.7725], 0.3666)
-    hidden_neuron2 = neuralnetwork.Neuron(activation.sigmoid_bipolar(), [1.4412, 1.3907], -1.5368)
-    hidden_layer = neuralnetwork.Layer([hidden_neuron1, hidden_neuron2])
-    output_neuron = neuralnetwork.Neuron(activation.linear(), [-1.2556, 1.3087], 0.8297)
-    output_layer = neuralnetwork.Layer([output_neuron])
-    return neuralnetwork.Network([hidden_layer, output_layer])
+    hidden_neuron1 = network.Neuron(activation.sigmoid_bipolar(), [0.7827, 0.7725], 0.3666)
+    hidden_neuron2 = network.Neuron(activation.sigmoid_bipolar(), [1.4412, 1.3907], -1.5368)
+    hidden_layer = network.Layer([hidden_neuron1, hidden_neuron2])
+    output_neuron = network.Neuron(activation.linear(), [-1.2556, 1.3087], 0.8297)
+    output_layer = network.Layer([output_neuron])
+    return network.Network([hidden_layer, output_layer])
 
 
 def quick_test():

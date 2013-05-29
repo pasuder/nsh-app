@@ -12,10 +12,10 @@ def pretty_print(inner_func):
 
 
 def normalize(inner_func):
-    def func(values_sequence):
-        minimum, maximum = min(values_sequence), max(values_sequence)
+    def func(values):
+        minimum, maximum = min(values), max(values)
         diff = maximum - minimum
-        result_sequence = inner_func(map(lambda val: (val - minimum) / diff, values_sequence))
-        return map(lambda val: (val * diff) + minimum, result_sequence)
+        results = inner_func(map(lambda val: (val - minimum) / diff, values))
+        return map(lambda val: (val * diff) + minimum, results)
 
     return func

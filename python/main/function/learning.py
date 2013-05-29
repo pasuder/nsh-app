@@ -1,7 +1,8 @@
+from main.tools import function
+
 __author__ = 'paoolo'
 
 import math
-import func
 
 
 def competitive(learning_rate):
@@ -16,7 +17,9 @@ def competitive(learning_rate):
         winner.weights = map(lambda obj: obj[1] + learning_rate(iteration) * (obj[0] - obj[1]),
                              zip(traits, winner.weights))
 
-    return func.FunctionWrapper(inner_func, 'learning.competitive', 'Competitive learning mode for Kohonen networks')
+    return function.Function(inner_func,
+                             'learning.competitive',
+                             'Competitive learning mode for Kohonen networks')
 
 
 def neighborhood(learning_rate, measurement, neighborhood_radius):
@@ -38,4 +41,24 @@ def neighborhood(learning_rate, measurement, neighborhood_radius):
             lambda obj: obj[1] + learning_rate(iteration) * distance(neuron, winner, iteration) * (obj[0] - obj[1]),
             zip(traits, neuron.weights))
 
-    return func.FunctionWrapper(inner_func, 'learning.neighborhood', 'Neighborhood learning mode for Kohonen network')
+    return function.Function(inner_func,
+                             'learning.neighborhood',
+                             'Neighborhood learning mode for Kohonen network')
+
+
+def widrow_hoff(mi, kj):
+    """
+    Widrow-Hoff learning mode.
+
+    Keyword arguments:
+    mi -- stable parameter
+    kj -- sequence of parameters
+    """
+
+    def inner_func(neuron, winner, traits):
+        val = mi * (neuron.compute(traits) - winner.compute(traits))
+        neuron.weights = map(lambda obj: obj[1] + val * obj[0], zip(kj, neuron.weights))
+
+    return function.Function(inner_func,
+                             'learning.widrow_hoff',
+                             'Widrow-Hoff learning mode for CounterPropagation network')
