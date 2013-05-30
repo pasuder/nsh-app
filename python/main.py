@@ -3,7 +3,23 @@ __author__ = 'paoolo'
 
 import getopt
 import sys
-import interpreter
+import cmd
+
+from main import interpreter
+
+
+class Main(cmd.Cmd):
+    def do_load(self, path):
+        print path
+
+    def do_quit(self, line):
+        return True
+
+    def do_EOF(self, line):
+        return True
+
+    def postloop(self):
+        print
 
 
 def shell():
@@ -13,7 +29,7 @@ def shell():
         sys.stdout.write('nsh> ')
         line = sys.stdin.readline()
         while line is not None:
-            env = interpreter.parse(line, env)
+            env = interpreter.parse(line)
             sys.stdout.write('nsh> ')
             line = sys.stdin.readline()
     except KeyboardInterrupt:
@@ -25,7 +41,7 @@ def batch(source):
     print 'Neuronal (batch)'
     env = {}
     for line in source:
-        env = interpreter.parse(line, env)
+        env = interpreter.parse(line)
     return env
 
 

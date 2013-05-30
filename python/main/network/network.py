@@ -112,15 +112,24 @@ class Layer(object):
         """
         map(lambda neuron: neuron.zero(), self.neurons)
 
-    def get_winners(self, traits):
+    def get_winners_indexes(self, traits):
+        """
+        Get indexes of winners for traits vector.
+
+        Keyword arguments:
+        traits      -- traits vector
+        """
+        result = self.compute(traits)
+        return [i for i, j in enumerate(result) if j == max(result)]
+
+    def get_winners(self, traits, indexes=None):
         """
         Find winner for traits vector.
 
         Keyword arguments:
         traits      -- traits vector
         """
-        result = self.compute(traits)
-        return map(lambda index: self.neurons[index], [i for i, j in enumerate(result) if j == max(result)])
+        return map(lambda index: self.neurons[index], self.get_winners_indexes(traits) if indexes is None else indexes)
 
     @decorators.pretty_print
     def __str__(self):

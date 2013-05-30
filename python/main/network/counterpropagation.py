@@ -3,7 +3,7 @@ __author__ = 'paoolo'
 from kohonen import Kohonen
 from network import Layer, Neuron
 
-from main.trainer import counterpropagation
+from main.trainer import counterpropagation, trainer
 
 
 class CounterPropagation(Kohonen):
@@ -19,5 +19,11 @@ class CounterPropagation(Kohonen):
     def train_competitive(self, traits, config, iterations):
         counterpropagation.train_competitive(self, traits, config, iterations)
 
+    def train_competitive_multi(self, traits, configs):
+        trainer.train_multi(self, traits, counterpropagation.train_competitive, configs)
+
     def train_neighborhood(self, traits, config, iterations):
         counterpropagation.train_neighborhood(self, traits, config, iterations)
+
+    def train_neighborhood_multi(self, traits, configs):
+        trainer.train_multi(self, traits, counterpropagation.train_neighborhood, configs)

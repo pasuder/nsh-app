@@ -1,3 +1,5 @@
+import sys
+
 __author__ = 'paoolo'
 
 import re
@@ -6,249 +8,298 @@ from network.network import Neuron, Layer, Network
 from network.kohonen import Kohonen
 from network.counterpropagation import CounterPropagation
 
-from const import activation_func, error_text, info_text, learning_rate_func, measures_func, neighborhood_func, \
-    help_text, LEARNING_RATE, MEASUREMENT, NEIGHBORHOOD_RADIUS
+from main.const import LEARNING_RATE, MEASUREMENT, NEIGHBORHOOD_RADIUS, ACTIVATION_FUNC, LEARNING_RATE_FUNC, \
+    NEIGHBORHOOD_FUNC, MEASUREMENT_FUNC, ERROR_TEXT
 
 
-def normalize(line):
-    return re.split(r'\s', re.sub(r'\s+', ' ', re.sub(r'^\s+', '', re.sub(r'\s+$', '', line))))
+ENVIRONMENT = {}
 
 
-def first_index(what, sequence):
-    return reduce(lambda t, w: (t[0], True) if not t[1] and w == what else (
-        t[0] + 1 if not t[1] else t[0], t[1]), sequence, (0, False))[0]
-
-
-def new_neuron(chunks, env):
-    name = chunks[1]
-
-    try:
-        func = activation_func[chunks[2]]
-    except KeyError as e:
-        print error_text['activation_function_not_found'] % (chunks[2], str(e.message))
-        func = None
-
-    location = first_index('location', chunks)
-    weights = map(lambda w: float(w), chunks[3:location - 1])
-    bias = float(chunks[location - 1])
-    location = map(lambda x: float(x), chunks[location + 1:])
-
+def new_neuron(name, func, weights, bias, location):
     if func is not None:
         neuron = Neuron(func, weights, bias, location)
-        env[name] = neuron
-        print info_text['neuron_added'] % name
-    else:
-        print info_text['neuron_not_added'] % name
-
-    return env
+        ENVIRONMENT[name] = neuron
 
 
-def new_layer(chunks, env):
-    name = chunks[1]
-
-    try:
-        neurons = map(lambda n: env[n], chunks[2:])
-
-        layer = Layer(neurons)
-        env[name] = layer
-        print info_text['layer_added'] % name
-    except KeyError as e:
-        print error_text['neuron_not_found'] % ('', str(e.message))
-        print info_text['layer_not_added'] % name
-
-    return env
+def new_layer(name, neurons):
+    layer = Layer(neurons)
+    ENVIRONMENT[name] = layer
 
 
-def new_network(chunks, env):
-    name = chunks[1]
-
-    try:
-        layers = map(lambda l: env[l], chunks[2:])
-
-        network = Network(layers)
-        env[name] = network
-        print info_text['network_added'] % name
-    except KeyError as e:
-        print error_text['layer_not_found'] % ('', str(e.message))
-        print info_text['network_not_added'] % name
-
-    return env
+def new_network(name, layers):
+    network = Network(layers)
+    ENVIRONMENT[name] = network
 
 
-def get_activation_func(name):
-    try:
-        return activation_func[name]
-    except KeyError as e:
-        print error_text['activation_function_not_found'] % (name, str(e.message))
-        return None
-
-
-def new_kohonen(chunks, env):
-    name = chunks[1]
-
-    input_func = get_activation_func(chunks[2])
-    kohonen_func = get_activation_func(chunks[3])
-
-    inputs = int(chunks[4])
-    width = int(chunks[5])
-
-    if len(chunks) < 7:
-        height = 1
-    else:
-        height = int(chunks[6])
-
+def new_kohonen(name, input_func, kohonen_func, inputs, width, height):
     if input_func is not None and kohonen_func is not None:
-        env[name] = Kohonen(input_func=input_func,
-                            kohonen_func=kohonen_func,
-                            inputs=inputs,
-                            width=width,
-                            height=height)
-        print info_text['network_added'] % name
-    else:
-        print info_text['network_not_added'] % name
-
-    return env
+        ENVIRONMENT[name] = Kohonen(input_func=input_func, kohonen_func=kohonen_func,
+                                    inputs=inputs, width=width, height=height)
 
 
-def new_cp(chunks, env):
-    name = chunks[1]
-
-    input_func = get_activation_func(chunks[2])
-    kohonen_func = get_activation_func(chunks[3])
-    grossberg_func = get_activation_func(chunks[4])
-
-    inputs = int(chunks[5])
-    outputs = int(chunks[6])
-    width = int(chunks[7])
-
-    if len(chunks) < 8:
-        height = 1
-    else:
-        height = int(chunks[6])
-
+def new_cp(name, input_func, kohonen_func, grossberg_func, inputs, outputs, width, height):
     if input_func is not None and kohonen_func is not None and grossberg_func is not None:
-        env[name] = CounterPropagation(input_func=input_func,
-                                       kohonen_func=kohonen_func,
-                                       grossberg_func=grossberg_func,
-                                       inputs=inputs,
-                                       outputs=outputs,
-                                       width=width,
-                                       height=height)
-        print info_text['network_added'] % name
-    else:
-        print info_text['network_not_added'] % name
+        ENVIRONMENT[name] = CounterPropagation(input_func=input_func,
+                                               kohonen_func=kohonen_func,
+                                               grossberg_func=grossberg_func,
+                                               inputs=inputs, outputs=outputs,
+                                               width=width, height=height)
 
 
-def show_all(chunks, env):
-    for k in env:
-        print '\t' + k
-    return env
+def init_weights(obj, min_value, max_value):
+    if obj is not None:
+        obj.init(min_value=min_value, max_value=max_value)
 
 
-def show(chunks, env):
+def zero_weights(obj):
+    if obj is not None:
+        obj.zero()
+
+
+def set_location(obj, location):
+    if obj is not None:
+        try:
+            obj.locate(location)
+        except AttributeError:
+            print 'Cannot set location'
+
+
+def show_all():
+    out = 'List of all elements'
+    for key in ENVIRONMENT:
+        out += '\n\t' + key
+    print out
+
+
+def show(obj):
+    if obj is not None:
+        print obj
+
+
+def compute(obj, values):
+    if obj is not None:
+        print obj.compute(values)
+
+
+def load(source):
     try:
-        print env[chunks[1]]
-    except KeyError as e:
-        print error_text['name_not_found'] % (chunks[1], e.message)
-    return env
-
-
-def compute(chunks, env):
-    try:
-        print env[chunks[1]].compute(map(lambda i: float(i), chunks[2:]))
-    except KeyError as e:
-        print error_text['name_not_found'] % (chunks[1], e.message)
-    return env
-
-
-def init(chunks, env):
-    env[chunks[1]].init(min_value=float(chunks[2]), max_value=float(chunks[3]))
-    return env
-
-
-def zero(chunks, env):
-    try:
-        env[chunks[1]].zero()
-    except KeyError as e:
-        print error_text['name_not_found'] % (chunks[1], e.message)
-    return env
-
-
-def load(chunks, env):
-    try:
-        source = open(chunks[1])
         for line in source:
             if not re.match(r'^(#.*)?$', line):
-                env = parse(line, env)
+                parse(line)
         print 'Loaded.'
     except IOError as e:
-        print error_text['file_not_found'] % (chunks[1], e.message)
-    return env
+        print 'Error during loading file: %s' % e
 
 
-def locate(chunks, env):
-    try:
-        env[chunks[1]].locate(map(lambda x: float(x), chunks[2:]))
-    except KeyError:
-        print 'Name ' + chunks[1] + ' not found'
-    except BaseException as e:
-        print 'Cannot set location on ' + chunks[1] + ': ' + str(e.message)
-    return env
+def train_c(obj, learning_rate_func, iteration, traits):
+    if obj is not None and learning_rate_func is not None and iteration is not None:
+        try:
+            config = {LEARNING_RATE: learning_rate_func}
+            obj.train_competitive(traits=traits, config=config, iterations=iteration)
+        except AttributeError:
+            print 'Cannot train network using competitive mode'
 
 
-def train_c(chunks, env):
-    try:
-        config = {LEARNING_RATE: learning_rate_func[chunks[2]]}
-        env[chunks[1]].train_competitive(traits=map(lambda x: float(x), chunks[4:]),
-                                         config=config,
-                                         iterations=int(chunks[3]))
-    except KeyError as e:
-        print 'Name ' + chunks[1] + ' not found: ' + str(e.message)
-    except AttributeError as e:
-        print chunks[1] + ' is not a Kohonen network: ' + str(e.message)
-    return env
+def train_n(obj, learning_rate_func, measurement_func, neighborhood_radius_func, iterations, traits):
+    if obj is not None and learning_rate_func is not None and \
+                    measurement_func is not None and neighborhood_radius_func is not None:
+        try:
+            config = {LEARNING_RATE: learning_rate_func,
+                      MEASUREMENT: measurement_func,
+                      NEIGHBORHOOD_RADIUS: neighborhood_radius_func}
+            obj.train_neighborhood(traits=traits, config=config, iterations=iterations)
+        except AttributeError:
+            print 'Cannot train network using neighborhood mode'
 
 
-def train_n(chunks, env):
-    try:
-        config = {LEARNING_RATE: learning_rate_func[chunks[2]], MEASUREMENT: measures_func[chunks[3]],
-                  NEIGHBORHOOD_RADIUS: neighborhood_func[chunks[4]]}
-        env[chunks[1]].train_neighborhood(traits=map(lambda x: float(x), chunks[6:]),
-                                          config=config,
-                                          iterations=int(chunks[5]))
-    except KeyError as e:
-        print 'Name ' + chunks[1] + ' not found: ' + str(e.message)
-    except AttributeError as e:
-        print chunks[1] + ' is not a Kohonen network: ' + str(e.message)
-    return env
+def error_handler(inner_func, error_text, error_type=BaseException):
+    def func(*args, **kwargs):
+        try:
+            return inner_func(*args, **kwargs)
+        except error_type as e:
+            print '%s: %s' % (error_text, e)
+            return None
+
+    return func
 
 
-function = {'new_neuron': (5, new_neuron),
-            'new_layer': (3, new_layer),
-            'new_network': (3, new_network),
-            'new_kohonen': (6, new_kohonen),
-            'new_cp': (7, new_cp),
-            'show_all': (1, show_all),
-            'show': (2, show),
-            'compute': (3, compute),
-            'init': (3, init),
-            'zero': (2, zero),
-            'load': (2, load),
-            'locate': (2, locate),
-            'train_c': (4, train_c),
-            'train_n': (6, train_n)}
+def value_error_handler(inner_func, error_text):
+    return error_handler(inner_func, error_text, ValueError)
 
 
-def parse(line, env):
-    line = normalize(line)
+def key_error_handler(inner_func, error_text):
+    return error_handler(inner_func, error_text, KeyError)
+
+
+def io_error_handler(inner_func, error_text):
+    return error_handler(inner_func, error_text, IOError)
+
+
+def get_func(func_dict):
+    def inner_func(val):
+        val = val.split(',')
+        if val > 0:
+            args = map(lambda arg: float(arg), val[1:])
+            return func_dict[val[0]](*args)
+
+    return inner_func
+
+
+GET_ACTIVATION_FUNC = key_error_handler(get_func(ACTIVATION_FUNC), ERROR_TEXT['activation_function_not_found'])
+GET_LEARNING_RATE_FUNC = key_error_handler(get_func(LEARNING_RATE_FUNC), ERROR_TEXT['learning_rate_function_not_found'])
+GET_NEIGHBORHOOD_FUNC = key_error_handler(get_func(NEIGHBORHOOD_FUNC), ERROR_TEXT['neighborhood_function_not_found'])
+GET_MEASUREMENT_FUNC = key_error_handler(lambda val: MEASUREMENT_FUNC[val], ERROR_TEXT['measures_function_not_found'])
+
+GET_OBJECT = key_error_handler(lambda val: ENVIRONMENT[val], ERROR_TEXT['object_not_found'])
+GET_OBJECTS = lambda val: map(GET_OBJECT, val.split(','))
+
+TO_STR = lambda val: val
+TO_INT = value_error_handler(lambda val: int(val), 'Cannot convert value to integer')
+TO_FLOAT = value_error_handler(lambda val: float(val), 'Cannot convert value to float')
+TO_FILE = io_error_handler(lambda val: open(val), 'Cannot open file')
+
+TO_INTS = lambda val: map(TO_INT, val.split(','))
+TO_FLOATS = lambda val: map(TO_FLOAT, val.split(','))
+
+commands = {
+    'new_neuron': {
+        'function': new_neuron,
+        'params': [
+            ('name', TO_STR),
+            ('func', GET_ACTIVATION_FUNC),
+            ('weights', TO_FLOATS),
+            ('bias', TO_FLOAT),
+            ('location', TO_INTS)
+        ],
+    },
+    'new_layer': {
+        'function': new_layer,
+        'params': [
+            ('name', TO_STR),
+            ('neurons', GET_OBJECTS)
+        ]
+    },
+    'new_network': {
+        'function': new_network,
+        'params': [
+            ('name', TO_STR),
+            ('layers', GET_OBJECTS)
+        ]
+    },
+    'new_kohonen': {
+        'function': new_kohonen,
+        'params': [
+            ('name', TO_STR),
+            ('input_func', GET_ACTIVATION_FUNC),
+            ('kohonen_func', GET_ACTIVATION_FUNC),
+            ('inputs', TO_INT),
+            ('width', TO_INT),
+            ('height', TO_INT)
+        ]
+    },
+    'new_cp': {
+        'function': new_cp,
+        'params': [
+            ('name', TO_STR),
+            ('input_func', GET_ACTIVATION_FUNC),
+            ('kohonen_func', GET_ACTIVATION_FUNC),
+            ('grossberg_func', GET_ACTIVATION_FUNC),
+            ('inputs', TO_INT),
+            ('outputs', TO_INT),
+            ('width', TO_INT),
+            ('height', TO_INT)
+        ]
+    },
+    'init_weights': {
+        'function': init_weights,
+        'params': [
+            ('name', GET_OBJECT),
+            ('min', TO_FLOAT),
+            ('max', TO_FLOAT)
+        ]
+    },
+    'zero_weights': {
+        'function': zero_weights,
+        'params': [
+            ('name', GET_OBJECT)
+        ]
+    },
+    'set_location': {
+        'function': set_location,
+        'params': [
+            ('name', GET_OBJECT),
+            ('location', TO_INTS)
+        ]
+    },
+    'show_all': {
+        'function': show_all,
+        'params': []
+    },
+    'show': {
+        'function': show,
+        'params': [
+            ('name', GET_OBJECT)
+        ]
+    },
+    'compute': {
+        'function': compute,
+        'params': [
+            ('name', GET_OBJECT),
+            ('values', TO_FLOATS)
+        ]
+    },
+    'load': {
+        'function': load,
+        'params': [
+            ('file_name', TO_FILE)
+        ]
+    },
+    'train_c': {
+        'function': train_c,
+        'params': [
+            ('name', GET_OBJECT),
+            ('learning_rate_func', GET_LEARNING_RATE_FUNC),
+            ('iteration', TO_INT),
+            ('traits', TO_FLOATS)
+        ]
+    },
+    'train_n': {
+        'function': train_n,
+        'params': [
+            ('name', GET_OBJECT),
+            ('learning_rate_func', GET_LEARNING_RATE_FUNC),
+            ('measurement_func', GET_MEASUREMENT_FUNC),
+            ('neighborhood_radius_func', GET_NEIGHBORHOOD_FUNC),
+            ('iterations', TO_INT),
+            ('traits', TO_FLOATS)
+        ]
+    }
+}
+
+
+def print_error(line):
+    sys.stderr.write(line + '\n')
+
+
+def parse(line):
+    line = line.split()
     if len(line) > 0:
         try:
-            if len(line) < function[line[0]][0]:
-                print help_text[line[0]]
-            else:
-                env = function[line[0]][1](line, env)
-        except KeyError:
-            print help_text['']
-    else:
-        print help_text['']
-    return env
+            command = commands[line[0]]
+            try:
+                function, params = command['function'], command['params']
+                try:
+                    args = map(lambda (param, arg): param[1](arg), zip(params, line[1:]))
+                    try:
+                        function(*args)
+                    except TypeError as e:
+                        print_error('Internal error: %s' % e)
+                        print 'Usage: %s' % reduce(lambda acc, val: acc + ' ' + val[0], params, line[0])
+                    except BaseException as e:
+                        print_error('Internal error: %s' % e)
+                except TypeError as e:
+                    print_error('Internal error: %s' % e)
+            except KeyError as e:
+                print_error('Internal error: %s' % e)
+        except KeyError as e:
+            print 'Available commands: %s' % reduce(lambda acc, val: acc + ' ' + val, commands)

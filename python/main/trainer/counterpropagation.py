@@ -5,23 +5,25 @@ from main.const import LEARNING_RATE, MEASUREMENT, NEIGHBORHOOD_RADIUS, GROSSBER
 
 
 def train_competitive(network, traits, config, iterations):
-    kohonen_trainer = competitive(config['learning_rate'])
-    grossberg_trainer = widrow_hoff(config['mi'], config['kj'])
+    trainer_kohonen = competitive(config[LEARNING_RATE])
+    trainer_grossberg = widrow_hoff(config[GROSSBERG_PARAMETER])
 
     for iteration in range(0, iterations):
-        for winner in network[1].get_winners(traits):
-            kohonen_trainer(winner, traits, iteration)
-            for neuron_kohonen in network[2].get_winners(traits):
-                grossberg_trainer(neuron_kohonen, winner, traits)
+        winners_indexes = network[1].get_winners_indexes(traits)
+        for winner, index in (network[1].get_winners(traits, winners_indexes), winners_indexes):
+            trainer_kohonen(winner, traits, iteration)
+            for neuron_grossberg in network[2]:
+                trainer_grossberg(neuron_grossberg, winner, index, traits)
 
 
 def train_neighborhood(network, traits, config, iterations):
-    kohonen_trainer = neighborhood(config[LEARNING_RATE], config[MEASUREMENT], config[NEIGHBORHOOD_RADIUS])
-    grossberg_trainer = widrow_hoff(config[GROSSBERG_PARAMETER], config['kj'])
+    trainer_kohonen = neighborhood(config[LEARNING_RATE], config[MEASUREMENT], config[NEIGHBORHOOD_RADIUS])
+    trainer_grossberg = widrow_hoff(config[GROSSBERG_PARAMETER])
 
     for iteration in range(0, iterations):
-        for winner in network[1].get_winners(traits):
+        winners_indexes = network[1].get_winners_indexes(traits)
+        for winner, index in (network[1].get_winners(traits, winners_indexes), winners_indexes):
             for neuron_kohonen in network[1]:
-                kohonen_trainer(neuron_kohonen, winner, traits, iteration)
+                trainer_kohonen(neuron_kohonen, winner, traits, iteration)
                 for neuron_grossberg in network[2]:
-                    grossberg_trainer(neuron_grossberg, winner, traits)
+                    trainer_grossberg(neuron_grossberg, winner, index, traits)

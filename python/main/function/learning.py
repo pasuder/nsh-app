@@ -10,7 +10,7 @@ def competitive(learning_rate):
     Kohonen competitive learning mode.
 
     Keyword arguments:
-    learning_rate -- function to determine learning rate in next iteration
+    learning_rate       -- function to determine learning rate in next iteration
     """
 
     def inner_func(winner, traits, iteration):
@@ -27,8 +27,8 @@ def neighborhood(learning_rate, measurement, neighborhood_radius):
     Kohonen competitive learning mode with neighborhood.
 
     Keyword arguments:
-    learning_rate -- function to determine learning rate in next iteration
-    measurement -- function used to compute distance neurons location
+    learning_rate       -- function to determine learning rate in next iteration
+    measurement         -- function used to compute distance neurons location
     neighborhood_radius -- neighborhood radius function
     """
 
@@ -46,18 +46,16 @@ def neighborhood(learning_rate, measurement, neighborhood_radius):
                              'Neighborhood learning mode for Kohonen network')
 
 
-def widrow_hoff(mi, kj):
+def widrow_hoff(param):
     """
     Widrow-Hoff learning mode.
 
     Keyword arguments:
-    mi -- stable parameter
-    kj -- sequence of parameters
+    param               -- stable parameter
     """
 
-    def inner_func(neuron, winner, traits):
-        val = mi * (neuron.compute(traits) - winner.compute(traits))
-        neuron.weights = map(lambda obj: obj[1] + val * obj[0], zip(kj, neuron.weights))
+    def inner_func(neuron, winner, index, traits):
+        neuron.weights[index] += param * (neuron.compute(traits) - winner.compute(traits))
 
     return function.Function(inner_func,
                              'learning.widrow_hoff',

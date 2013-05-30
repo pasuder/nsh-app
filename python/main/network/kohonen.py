@@ -2,7 +2,7 @@ __author__ = 'paoolo'
 
 from network import Network, Layer, Neuron
 
-from main.trainer import kohonen
+from main.trainer import kohonen, trainer
 
 
 class Kohonen(Network):
@@ -29,5 +29,11 @@ class Kohonen(Network):
     def train_competitive(self, traits, config, iterations):
         kohonen.train_competitive(self, traits, config, iterations)
 
+    def train_competitive_multi(self, traits, configs):
+        trainer.train_multi(self, traits, kohonen.train_competitive, configs)
+
     def train_neighborhood(self, traits, config, iterations):
         kohonen.train_neighborhood(self, traits, config, iterations)
+
+    def train_neighborhood_multi(self, traits, configs):
+        trainer.train_multi(self, traits, kohonen.train_neighborhood, configs)
