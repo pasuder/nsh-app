@@ -26,29 +26,27 @@ compute      XOR    1.0,1.0
 ## Creating 1D Kohonen network
 new_kohonen  Test1D  sigmoid_bipolar sigmoid_bipolar 4 4 1
 zero_weights Test1D
-#show         Test1D
 
 init_weights Test1D  0.0 1.0
-#show         Test1D
 train_c      Test1D  linear                         10 1.0,1.0,1.0,1.0
-#show         Test1D
 
 init_weights Test1D  0.0 1.0
-#show         Test1D
 train_n      Test1D  linear euclidean exponential   10 1.0,1.0,1.0,1.0
-#show         Test1D
+
+## 2D Kohonen multi config training
+multi_train_c Test1D 1.0,1.0,1.0,1.0 linear;10|linear;20|linear;30
+multi_train_n Test1D 1.0,1.0,1.0,1.0 linear;euclidean;exponential;10|linear;euclidean;exponential;20|linear;euclidean;exponential;30
 
 ## Creating 2D Kohonen network
 new_kohonen  Test2D  sigmoid_bipolar sigmoid_bipolar 4 4 4
 zero_weights Test2D
-#show         Test2D
 
 init_weights Test2D  0.0 1.0
-#show         Test2D
 train_c      Test2D  linear                         10 1.0,1.0,1.0,1.0
-#show         Test2D
 
 init_weights Test2D  0.0 1.0
-#show         Test2D
 train_n      Test2D  linear euclidean exponential   10 1.0,1.0,1.0,1.0
-#show         Test2D
+
+## 2D Kohonen multi config training
+multi_train_c Test2D 1.0,1.0,1.0,1.0 linear;10|linear;20|linear;30
+multi_train_n Test2D 1.0,1.0,1.0,1.0 linear;euclidean;exponential;10|linear;euclidean;exponential;20|linear;euclidean;exponential;30

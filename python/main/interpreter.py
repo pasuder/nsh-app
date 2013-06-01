@@ -109,6 +109,30 @@ def train_n(obj, learning_rate_func, measurement_func, neighborhood_radius_func,
                       NEIGHBORHOOD_RADIUS: neighborhood_radius_func}
             obj.train_neighborhood(traits=traits, config=config, iterations=iterations)
         except AttributeError:
+            print 'Cannot train network using competitive mode'
+
+
+def multi_train_c(obj, traits, configs):
+    if obj is not None and traits is not None and configs is not None:
+        try:
+            for config in configs:
+                iterations = config[1]
+                config = {LEARNING_RATE: config[0]}
+                obj.train_competitive(traits=traits, config=config, iterations=iterations)
+        except AttributeError:
+            print 'Cannot train network using neighborhood mode'
+
+
+def multi_train_n(obj, traits, configs):
+    if obj is not None and traits is not None and configs is not None:
+        try:
+            for config in configs:
+                iterations = config[3]
+                config = {LEARNING_RATE: config[0],
+                          MEASUREMENT: config[1],
+                          NEIGHBORHOOD_RADIUS: config[2]}
+                obj.train_neighborhood(traits=traits, config=config, iterations=iterations)
+        except AttributeError:
             print 'Cannot train network using neighborhood mode'
 
 
@@ -160,6 +184,19 @@ TO_FILE = io_error_handler(lambda val: open(val), 'Cannot open file')
 
 TO_INTS = lambda val: map(TO_INT, val.split(','))
 TO_FLOATS = lambda val: map(TO_FLOAT, val.split(','))
+
+
+def GET_CONFIG_C(line):
+    return map(lambda val: val[0](val[1]), zip([GET_ACTIVATION_FUNC, TO_INT], line.split(';')))
+
+
+def GET_CONFIG_N(line):
+    return map(lambda val: val[0](val[1]),
+               zip([GET_ACTIVATION_FUNC, GET_MEASUREMENT_FUNC, GET_NEIGHBORHOOD_FUNC, TO_INT], line.split(';')))
+
+
+GET_CONFIGS_C = lambda val: map(GET_CONFIG_C, val.split('|'))
+GET_CONFIGS_N = lambda val: map(GET_CONFIG_N, val.split('|'))
 
 commands = {
     'new_neuron': {
@@ -272,6 +309,22 @@ commands = {
             ('neighborhood_radius_func', GET_NEIGHBORHOOD_FUNC),
             ('iterations', TO_INT),
             ('traits', TO_FLOATS)
+        ]
+    },
+    'multi_train_c': {
+        'function': multi_train_c,
+        'params': [
+            ('name', GET_OBJECT),
+            ('traits', TO_FLOATS),
+            ('configs', GET_CONFIGS_C)
+        ]
+    },
+    'multi_train_n': {
+        'function': multi_train_n,
+        'params': [
+            ('name', GET_OBJECT),
+            ('traits', TO_FLOATS),
+            ('configs', GET_CONFIGS_N)
         ]
     }
 }
