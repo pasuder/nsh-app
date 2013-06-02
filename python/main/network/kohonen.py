@@ -24,7 +24,7 @@ class Kohonen(Network):
 
         # initialize network with Kohonen layers
         super(Kohonen, self).__init__(
-            [Layer(input_layer), Layer(kohonen_layer)] + [] if output_layers is None else output_layers)
+            [Layer(input_layer), Layer(kohonen_layer)] + ([] if output_layers is None else output_layers))
 
     def train_competitive(self, traits, config, iterations):
         kohonen.train_competitive(self, traits, config, iterations)

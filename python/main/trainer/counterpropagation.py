@@ -10,10 +10,10 @@ def train_competitive(network, traits, config, iterations):
 
     for iteration in range(0, iterations):
         winners_indexes = network[1].get_winners_indexes(traits)
-        for winner, index in (network[1].get_winners(traits, winners_indexes), winners_indexes):
-            trainer_kohonen(winner, traits, iteration)
+        for val in zip(network[1].get_winners(traits, winners_indexes), winners_indexes):
+            trainer_kohonen(val[0], traits, iteration)
             for neuron_grossberg in network[2]:
-                trainer_grossberg(neuron_grossberg, winner, index, traits)
+                trainer_grossberg(neuron_grossberg, val[0], val[1], traits)
 
 
 def train_neighborhood(network, traits, config, iterations):
@@ -22,8 +22,8 @@ def train_neighborhood(network, traits, config, iterations):
 
     for iteration in range(0, iterations):
         winners_indexes = network[1].get_winners_indexes(traits)
-        for winner, index in (network[1].get_winners(traits, winners_indexes), winners_indexes):
+        for val in zip(network[1].get_winners(traits, winners_indexes), winners_indexes):
             for neuron_kohonen in network[1]:
-                trainer_kohonen(neuron_kohonen, winner, traits, iteration)
+                trainer_kohonen(neuron_kohonen, val[0], traits, iteration)
                 for neuron_grossberg in network[2]:
-                    trainer_grossberg(neuron_grossberg, winner, index, traits)
+                    trainer_grossberg(neuron_grossberg, val[0], val[1], traits)

@@ -24,7 +24,7 @@ compute      XOR    0.0,1.0
 compute      XOR    1.0,1.0
 
 ## Creating 1D Kohonen network
-new_kohonen  Test1D  sigmoid_bipolar sigmoid_bipolar 4 4 1
+new_kohonen  Test1D  linear sigmoid_bipolar 4 4 1
 zero_weights Test1D
 
 init_weights Test1D  0.0 1.0
@@ -47,7 +47,7 @@ multi_train_c Test1D 1.0,1.0,1.0,1.0 linear,1.0,1.0;10|linear,1.0;20|linear;30
 multi_train_n Test1D 1.0,1.0,1.0,1.0 linear,1.0,1.0;euclidean;exponential;10|linear,1.0;euclidean;exponential,1.0;20|linear;euclidean;exponential;30
 
 ## Creating 2D Kohonen network
-new_kohonen  Test2D  sigmoid_bipolar sigmoid_bipolar 4 4 4
+new_kohonen  Test2D  linear sigmoid_bipolar 4 4 4
 zero_weights Test2D
 
 init_weights Test2D  0.0 1.0
@@ -59,3 +59,13 @@ train_n      Test2D  linear euclidean exponential   10 1.0,1.0,1.0,1.0
 ## 2D Kohonen multi config training
 multi_train_c Test2D 1.0,1.0,1.0,1.0 linear;10|linear;20|linear;30
 multi_train_n Test2D 1.0,1.0,1.0,1.0 linear;euclidean;exponential;10|linear;euclidean;exponential;20|linear;euclidean;exponential;30
+
+## Creating CP network
+new_cp       TestCP  linear sigmoid_bipolar sigmoid_bipolar 4 4 4 4
+zero_weights TestCP
+
+init_weights TestCP  0.0 1.0
+train_c_cp   TestCP  linear 0.1                         10 1.0,1.0,1.0,1.0
+
+init_weights TestCP  0.0 1.0
+train_n_cp   TestCP  linear euclidean exponential 0.1   10 1.0,1.0,1.0,1.0
