@@ -1,35 +1,22 @@
 #!/usr/bin/python
+import re
+
 __author__ = 'paoolo'
 
 import getopt
 import sys
-import cmd
 
-from main import interpreter
-
-
-class Main(cmd.Cmd):
-    def do_load(self, path):
-        print path
-
-    def do_quit(self, line):
-        return True
-
-    def do_EOF(self, line):
-        return True
-
-    def postloop(self):
-        print
+from main.sh import interpreter
 
 
 def shell():
     print 'Neuronal (shell)'
-    env = {}
     try:
         sys.stdout.write('nsh> ')
         line = sys.stdin.readline()
         while line is not None:
-            env = interpreter.parse(line)
+            if not re.match("^\s*#+", line):
+                interpreter.interpret(line)
             sys.stdout.write('nsh> ')
             line = sys.stdin.readline()
     except KeyboardInterrupt:
@@ -39,31 +26,30 @@ def shell():
 
 def batch(source):
     print 'Neuronal (batch)'
-    env = {}
     for line in source:
-        env = interpreter.parse(line)
-    return env
+        if not re.match("^\s*#+", line):
+            interpreter.interpret(line)
 
 
 def usage():
-    print "Usage:\n" \
-          "-h --help\tprint this help\n" \
-          "-f --file\tselect input file"
+    print 'Usage:\n' \
+          '-h --help\tprint this help\n' \
+          '-f --file\tselect input file'
 
 
 if __name__ == '__main__':
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hf:", ["help", "file="])
+        opts, args = getopt.getopt(sys.argv[1:], 'hf:', ['help', 'file='])
 
         source = None
         for o, a in opts:
-            if o in ("-h", "--help"):
+            if o in ('-h', '--help'):
                 usage()
                 sys.exit()
-            elif o in ("-f", "--file"):
+            elif o in ('-f', '--file'):
                 source = open(a)
             else:
-                assert False, "unhandled option"
+                assert False, 'unhandled option'
 
         if source is None:
             shell()

@@ -1,6 +1,6 @@
-import traceback
-
 __author__ = 'paoolo'
+
+import math
 
 
 class Function(object):
@@ -14,3 +14,8 @@ class Function(object):
 
     def __str__(self):
         return self.name if self.desc is None else self.desc
+
+
+def normalize(values):
+    divisor = math.sqrt(reduce(lambda acc, val: acc + math.pow(val, 2), values))
+    return map(lambda value: value / divisor, values)

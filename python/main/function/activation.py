@@ -58,7 +58,7 @@ def sigmoid_unipolar(beta=0.0):
     Keyword arguments:
     beta -- epsilon factor value, mostly in range (0, 1] (default 0.0)
     """
-    return function.Function(lambda x: 1.0 / (1.0 + math.pow(math.e, -beta * x)),
+    return function.Function(lambda x: 1.0 / (1.0 + math.exp(-beta * x)),
                              'activation.sigmoid_unipolar',
                              'Sigmoid unipolar activation function')
 
@@ -72,7 +72,7 @@ def sigmoid_bipolar(beta=1.0):
     """
 
     def f(x):
-        val = math.pow(math.e, -beta * x)
+        val = math.exp(-beta * x)
         return (1.0 - val) / (1.0 + val)
 
     return function.Function(f,

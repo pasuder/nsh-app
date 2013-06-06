@@ -33,20 +33,20 @@ def neighborhood(learning_rate, measurement, neighborhood_radius):
     """
 
     def distance(neuron, winner, iteration):
-        return math.exp(-(math.pow(measurement(neuron.location, winner.location), 2)) / (
-            2 * math.pow(neighborhood_radius(iteration), 2)))
+        measure = measurement(neuron.location, winner.location)
+        return math.exp(-(math.pow(measure, 2)) / (2 * math.pow(neighborhood_radius(iteration), 2)))
 
     def inner_func(neuron, winner, traits, iteration):
         neuron.weights = map(
-            lambda obj: obj[1] + learning_rate(iteration) * distance(neuron, winner, iteration) * (obj[0] - obj[1]),
-            zip(traits, neuron.weights))
+            lambda obj: obj[1] + learning_rate(iteration) * distance(neuron, winner, iteration) * (
+                obj[0] - obj[1]), zip(traits, neuron.weights))
 
     return function.Function(inner_func,
                              'learning.neighborhood',
                              'Neighborhood learning mode for Kohonen network')
 
 
-def widrow_hoff(param):
+def widrow_hoff(grossberg_parameter):
     """
     Widrow-Hoff learning mode.
 
@@ -55,7 +55,7 @@ def widrow_hoff(param):
     """
 
     def inner_func(neuron, winner, index, traits):
-        neuron.weights[index] += param * (neuron.compute(traits) - winner.compute(traits))
+        neuron.weights[index] = neuron.weights[index] + grossberg_parameter * (neuron.compute(traits) - winner.compute(traits))
 
     return function.Function(inner_func,
                              'learning.widrow_hoff',
