@@ -105,6 +105,8 @@ If you want to use batch processing mode, type ``$ ./main.py -f path/to/file``.
 
 #### ``load``
 
+Load configuration from file.
+
 Parameters:
 
 *   ``file`` - ``string`` - path to file which contains commands to execute
@@ -112,6 +114,8 @@ Parameters:
 ### Creating objects
 
 #### ``new_neuron``
+
+Create new neuron.
 
 Parameters:
 
@@ -123,6 +127,8 @@ Parameters:
 
 #### ``new_layer``
 
+Create new layer using existing neurons.
+
 Parameters:
 
 *   ``name`` - ``string`` -  name of created layer
@@ -130,12 +136,16 @@ Parameters:
 
 #### ``new_network``
 
+Create new network using existing layers.
+
 Parameters:
 
 *   ``name`` - ``string`` - name of created network
 *   ``layers`` - ``string,string,...`` - sequence of names of layers used to create network
 
 #### ``new_kohonen``
+
+Create new Kohonen network.
 
 Parameters:
 
@@ -147,6 +157,8 @@ Parameters:
 *   ``height`` - ``int`` - height of 2D Kohonen map
 
 #### ``new_cp``
+
+Create new CounterPropagation network.
 
 Parameters:
 
@@ -163,6 +175,8 @@ Parameters:
 
 #### ``init_weights``
 
+Initialize weights on object using random values from range (min_value, max_value).
+
 Parameters:
 
 *   ``name`` - ``string`` - name of objects on which weights will initialized
@@ -171,11 +185,15 @@ Parameters:
 
 #### ``zero_weights``
 
+Set weights to zero.
+
 Parameters:
 
 *   ``name`` - ``string`` - name of objects on which weights will set to zero
 
 #### ``set_location``
+
+Set location on neuron.
 
 Parameters:
 
@@ -186,9 +204,13 @@ Parameters:
 
 #### ``show_all``
 
+Show list of objects names.
+
 Parameters: none
 
 #### ``show``
+
+Show details of object.
 
 Parameters:
 
@@ -198,21 +220,116 @@ Parameters:
 
 #### ``compute``
 
+Compute value on selected object.
+
 Parameters:
 
-*   ``name`` - ``string`` - name of objects which will be used to compute
+*   ``name`` - ``string`` - name of object which will be used to compute
 *   ``values`` - ``double,double,...`` - sequence of values used to compute
 
 ### Train network
 
 #### ``train_c``
 
+Train network using competitive mode (Kohonen network).
+
+Parameters:
+
+*   ``name`` - ``string`` - name of object which will be used to train
+*   ``learning_rate`` - ``string,params,...`` - name and params for learning rate function
+*   ``iterations`` - ``int`` - count of iterations
+*   ``traits`` - ``double,double,...`` - sequence of value of traits vector
+
 #### ``train_n``
+
+Train network using neighborhood mode (Kohonen network).
+
+Parameters:
+
+*   ``name`` - ``string`` - name of object which will be used to train
+*   ``learning_rate`` - ``string,params,...`` - name and params for learning rate function
+*   ``measurement`` - ``string,params,...`` - name and params for measurement function
+*   ``neighborhood_radius`` - ``string,params,...`` - name and params for neighborhood radius function
+*   ``iterations`` - ``int`` - count of iterations
+*   ``traits`` - ``double,double,...`` - sequence of value of traits vector
 
 #### ``train_c_cp``
 
+Train network using competitive mode (CounterPropagation network).
+
+Parameters:
+
+*   ``name`` - ``string`` - name of object which will be used to train
+*   ``learning_rate`` - ``string,params,...`` - name and params for learning rate function
+*   ``grossberg_parameter`` - ``double`` - value of parameter used in Grossberg layer
+*   ``iterations`` - ``int`` - count of iterations
+*   ``traits`` - ``double,double,...`` - sequence of value of traits vector
+
 #### ``train_n_cp``
+
+Train network using neighborhood mode (CounterPropagation network).
+
+Parameters:
+
+*   ``name`` - ``string`` - name of object which will be used to train
+*   ``learning_rate`` - ``string,params,...`` - name and params for learning rate function
+*   ``measurement`` - ``string,params,...`` - name and params for measurement function
+*   ``neighborhood_radius`` - ``string,params,...`` - name and params for neighborhood radius function
+*   ``grossberg_parameter`` - ``double`` - value of parameter used in Grossberg layer
+*   ``iterations`` - ``int`` - count of iterations
+*   ``traits`` - ``double,double,...`` - sequence of value of traits vector
 
 #### ``multi_train_c``
 
+Performing many training using neighborhood mode (Kohonen network).
+
+Parameters:
+
+*   ``name`` - ``string`` - name of object which will be used to train
+*   ``traits`` - ``double,double,...`` - sequence of value of traits vector
+*   ``configs`` - ``learning_rate;grossberg_parameter|learning_rate;grossberg_parameter|...``
+    *   ``learning_rate`` - ``string,params,...`` - name and params for learning rate function
+    *   ``iterations`` - ``int`` - count of iterations
+
 #### ``multi_train_n``
+
+Performing many training using neighborhood mode (Kohonen network).
+
+Parameters:
+
+*   ``name`` - ``string`` - name of object which will be used to train
+*   ``traits`` - ``double,double,...`` - sequence of value of traits vector
+*   ``configs`` - ``learning_rate;measurement;neighborhood_radius;grossberg_parameter|...``
+    *   ``learning_rate`` - ``string,params,...`` - name and params for learning rate function
+    *   ``measurement`` - ``string,params,...`` - name and params for measurement function
+    *   ``neighborhood_radius`` - ``string,params,...`` - name and params for neighborhood radius function
+    *   ``iterations`` - ``int`` - count of iterations
+
+#### ``multi_train_c_cp``
+
+Performing many training using neighborhood mode (CounterPropagation network).
+
+Parameters:
+
+*   ``name`` - ``string`` - name of object which will be used to train
+*   ``traits`` - ``double,double,...`` - sequence of value of traits vector
+*   ``configs`` - ``learning_rate;grossberg_parameter|learning_rate;grossberg_parameter|...``
+    *   ``learning_rate`` - ``string,params,...`` - name and params for learning rate function
+    *   ``grossberg_parameter`` - ``double`` - value of parameter used in Grossberg layer
+    *   ``iterations`` - ``int`` - count of iterations
+
+
+#### ``multi_train_n_cp``
+
+Performing many training using neighborhood mode (CounterPropagation network).
+
+Parameters:
+
+*   ``name`` - ``string`` - name of object which will be used to train
+*   ``traits`` - ``double,double,...`` - sequence of value of traits vector
+*   ``configs`` - ``learning_rate;measurement;neighborhood_radius;grossberg_parameter|...``
+    *   ``learning_rate`` - ``string,params,...`` - name and params for learning rate function
+    *   ``measurement`` - ``string,params,...`` - name and params for measurement function
+    *   ``neighborhood_radius`` - ``string,params,...`` - name and params for neighborhood radius function
+    *   ``grossberg_parameter`` - ``double`` - value of parameter used in Grossberg layer
+    *   ``iterations`` - ``int`` - count of iterations

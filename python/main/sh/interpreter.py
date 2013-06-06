@@ -192,5 +192,21 @@ commands = {
             ('traits', parser.parse_floats),
             ('configs', parser.parse_configs_n)
         ]
+    },
+    'multi_train_c_cp': {
+        'function': command.multi_train_c_cp,
+        'params': [
+            ('name', parser.parse_string),
+            ('traits', parser.parse_floats),
+            ('configs', parser.parse_configs_c_cp)
+        ]
+    },
+    'multi_train_n_cp': {
+        'function': command.multi_train_n_cp,
+        'params': [
+            ('name', parser.parse_string),
+            ('traits', parser.parse_floats),
+            ('configs', parser.parse_configs_n_cp)
+        ]
     }
 }
