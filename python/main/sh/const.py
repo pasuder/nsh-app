@@ -12,9 +12,11 @@ HELP_TEXT = {
                        '\tgauss,a=1.0,b=1.0,c=1.0',
     'learning_rate_func': 'Learning rate function not found.\n'
                           'Available learning rate function:\n'
+                          '\tconst,value=1.0\n'
                           '\tlinear,max_period=1.0,initial_rate=1.0\n'
                           '\tpower,alpha=1.0,initial_rate=1.0\n'
-                          '\texponential,max_iteration=1.0,min_transition=1.0,initial_rate=1.0',
+                          '\texponential,max_iteration=1.0,min_transition=1.0,initial_rate=1.0\n'
+                          '\tkohonen,alpha=0.1,beta=0.1',
     'neighborhood_func': 'Neighborhood function not found.\n'
                          'Available neighborhood function:\n'
                          '\tlinear,max_period=1.0,initial_radius=1.0\n'

@@ -54,13 +54,13 @@ parse_configs_n = lambda val: map(parse_config_n, val.split('|'))
 
 def parse_config_c_cp(line):
     return map(lambda val: val[0](val[1]),
-               zip([parse_learning_rate_func, parse_float, parse_int],
+               zip([parse_learning_rate_func, parse_learning_rate_func, parse_int],
                    line.split(';')))
 
 
 def parse_config_n_cp(line):
     return map(lambda val: val[0](val[1]),
-               zip([parse_learning_rate_func, parse_measurement_func, parse_neighborhood_func, parse_float, parse_int],
+               zip([parse_learning_rate_func, parse_measurement_func, parse_neighborhood_func, parse_learning_rate_func, parse_int],
                    line.split(';')))
 
 

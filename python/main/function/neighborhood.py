@@ -9,6 +9,8 @@ def linear(max_period=1.0, initial_radius=1.0):
     """
     Return a linear radius neighborhood function.
 
+    f(iteration) = initial_radius * (1.0 - iteration / max_period) + 1.0
+
     Keyword arguments:
     max_period -- maximal period time
     initial_radius -- initial radius of neighborhood
@@ -21,6 +23,8 @@ def linear(max_period=1.0, initial_radius=1.0):
 def exponential(max_iteration=1.0, min_transition=1.0, initial_radius=1.0):
     """
     Return an exponential radius neighborhood function.
+
+    f(iteration) = initial_radius * (min_transition / initial_radius)^(iteration / max_iteration)
 
     Keyword arguments:
     max_iteration -- maximum count of iteration

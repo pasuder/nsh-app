@@ -9,8 +9,10 @@ def linear(a=1.0, b=0.0):
     """
     Return linear activation function.
 
+    f(x) = a * x + b
+
     Keyword arguments:
-    a -- linear factor
+    a -- linear factor (default 1.0)
     b -- linear shift (default 0.0)
     """
     return function.Function(lambda x: a * x + b,
@@ -21,6 +23,11 @@ def linear(a=1.0, b=0.0):
 def linear_cut():
     """
     Return partially linear activation function.
+
+    f(x) = -1.0, x \in (-inf, -1.0)
+    f(x) =    x, x \in [-1.0, +1.0)
+    f(x) =  1.0, x \in [+1.0, +inf)
+
     """
     return function.Function(lambda x: -1.0 if x < -1.0 else (1.0 if x > 1.0 else x),
                              'activation.linear_cut',
@@ -30,6 +37,9 @@ def linear_cut():
 def threshold_unipolar(a=0.0):
     """
     Return threshold unipolar activation function.
+
+    f(x) = 0.0, x \in (-inf, a)
+    f(x) = 1.0, x \in [a, +inf)
 
     Keyword arguments:
     a -- threshold value (default 0.0)
@@ -43,6 +53,9 @@ def threshold_bipolar(a=0.0):
     """
     Return threshold bipolar activation function.
 
+    f(x) = -1.0, x \in (-inf, a)
+    f(x) = +1.0, x \in [a, +inf)
+
     Keyword arguments:
     a -- threshold value (default 0.0)
     """
@@ -51,12 +64,14 @@ def threshold_bipolar(a=0.0):
                              'Threshold bipolar activation function')
 
 
-def sigmoid_unipolar(beta=0.0):
+def sigmoid_unipolar(beta=1.0):
     """
     Return sigmoid unipolar activation function.
 
+    f(x) = 1.0 / (1.0 + exp(-beta * x) )
+
     Keyword arguments:
-    beta -- epsilon factor value, mostly in range (0, 1] (default 0.0)
+    beta -- epsilon factor value, mostly in range (0, 1] (default 1.0)
     """
     return function.Function(lambda x: 1.0 / (1.0 + math.exp(-beta * x)),
                              'activation.sigmoid_unipolar',
@@ -67,8 +82,10 @@ def sigmoid_bipolar(beta=1.0):
     """
     Return sigmoid bipolar activation function.
 
+    f(x) = (1.0 - exp(-beta * x)) / (1.0 + exp(-beta * x))
+
     Keyword arguments:
-    beta -- epsilon factor value, mostly in range (0, 1] (default 0.0)
+    beta -- epsilon factor value, mostly in range (0, 1] (default 1.0)
     """
 
     def f(x):
@@ -83,6 +100,8 @@ def sigmoid_bipolar(beta=1.0):
 def gauss(a=1.0, b=1.0, c=1.0):
     """
     Return Gauss activation function. Arguments must be greater than zero.
+
+    f(x) = a * Epsilon - ((x-b)^2 / (2.0 * c^2))
 
     Keyword arguments:
     a -- Euler linear factor

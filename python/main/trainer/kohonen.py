@@ -1,23 +1,29 @@
 __author__ = 'paoolo'
 
 from main.tools.function import normalize
-from main.function.learning import competitive, neighborhood
+from main.function.trainer import instar, neighborhood
 
 
-def train_competitive(network, traits, iterations, learning_rate):
-    trainer = competitive(learning_rate)
-    traits = normalize(traits)
+def train_competitive(network, signals, iterations, learning_rate):
+    trainer = instar(learning_rate)
+    signals = normalize(signals)
 
     for iteration in range(1, iterations):
-        for winner in network[1].get_winners(traits):
-            trainer(winner, traits, iteration)
+        try:
+            winner = network[1].get_winners(signals)[0]
+            trainer(winner, signals, iteration)
+        except IndexError:
+            pass
 
 
-def train_neighborhood(network, traits, iterations, learning_rate, measurement, neighborhood_radius):
+def train_neighborhood(network, signals, iterations, learning_rate, measurement, neighborhood_radius):
     trainer = neighborhood(learning_rate, measurement, neighborhood_radius)
-    traits = normalize(traits)
+    signals = normalize(signals)
 
     for iteration in range(1, iterations):
-        for winner in network[1].get_winners(traits):
+        try:
+            winner = network[1].get_winners(signals)[0]
             for neuron in network[1]:
-                trainer(neuron, winner, traits, iteration)
+                trainer(neuron, winner, signals, iteration)
+        except IndexError:
+            pass
