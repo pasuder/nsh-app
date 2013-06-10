@@ -10,7 +10,7 @@ from main.function.activation import linear
 class Neuron(object):
     def __init__(self, activation_func=linear(1.0), weights=None, bias=1.0, location=None):
         """
-        Create simple neuron.
+        Create neuron.
 
         Keyword arguments:
         active_func -- one argument function used to compute activation value
@@ -71,6 +71,15 @@ class Neuron(object):
     def __str__(self):
         return 'Neuron(' + str(self.activation_func) + ', weights=' + str(self.weights) + ', bias=' + str(
             self.bias) + ', location=' + str(self.location) + ')'
+
+    def __getitem__(self, item):
+        return self.weights[item]
+
+    def __setitem__(self, item, value):
+        self.weights[item] = value
+
+    def __iter__(self):
+        return self.weights.__iter__()
 
 
 class Layer(object):
@@ -138,6 +147,9 @@ class Layer(object):
     def __getitem__(self, item):
         return self.neurons[item]
 
+    def __setitem__(self, item, value):
+        self.neurons[item] = value
+
     def __iter__(self):
         return self.neurons.__iter__()
 
@@ -184,10 +196,13 @@ class Network(object):
         map(lambda layer: layer.zero(), self.layers)
 
     def __str__(self):
-        return 'Network{' + reduce(lambda acc, l: acc + '\n' + str(l), self.layers, '') + '\n}'
+        return 'Network{' + reduce(lambda acc, layer: acc + '\n' + str(layer), self.layers, '') + '\n}'
 
     def __getitem__(self, item):
         return self.layers[item]
+
+    def __setitem__(self, item, value):
+        self.layers[item] = value
 
     def __iter__(self):
         return self.layers.__iter__()

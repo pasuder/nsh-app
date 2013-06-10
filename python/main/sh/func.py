@@ -10,9 +10,11 @@ ACTIVATION_FUNC = {'linear': activation.linear,
                    'sigmoid_bipolar': activation.sigmoid_bipolar,
                    'gauss': activation.gauss}
 
-LEARNING_RATE_FUNC = {'linear': learningrate.linear,
+LEARNING_RATE_FUNC = {'const': learningrate.const,
+                      'linear': learningrate.linear,
                       'power': learningrate.power,
-                      'exponential': learningrate.exponential}
+                      'exponential': learningrate.exponential,
+                      'kohonen': learningrate.kohonen}
 
 NEIGHBORHOOD_FUNC = {'linear': neighborhood.linear,
                      'exponential': neighborhood.exponential}

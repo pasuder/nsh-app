@@ -63,7 +63,13 @@ new_cp = command_set_func(lambda kwargs: CounterPropagation(**kwargs))
 init = command_get_func(lambda obj, kwargs: obj.init(**kwargs))
 zero = command_get_func(lambda obj, kwargs: obj.zero())
 locate = command_get_func(lambda obj, kwargs: obj.locate(**kwargs))
-compute = command_get_func(lambda obj, kwargs: obj.compute(**kwargs))
+
+
+def compute(**kwargs):
+    name = kwargs['name']
+    del kwargs['name']
+    print 'Computation of ' + name + '\n\tfor ' + str(kwargs['values']) + '\n\tis ' + str(ENVIRONMENT[name].compute(**kwargs))
+
 
 train_c = command_get_func(lambda obj, kwargs: obj.train_competitive(**kwargs))
 train_n = command_get_func(lambda obj, kwargs: obj.train_neighborhood(**kwargs))
@@ -76,7 +82,7 @@ def multi_train(inner_func, params):
             for config in kwargs['configs']:
                 inner_kwargs = {key: value for (key, value) in zip(params, config[0:-1])}
                 inner_kwargs['iterations'] = config[-1]
-                inner_kwargs['traits'] = kwargs['traits']
+                inner_kwargs['signals'] = kwargs['signals']
                 inner_func(obj, inner_kwargs)
         except AttributeError:
             print 'Cannot train network'
