@@ -22,9 +22,11 @@ def show(name):
 
 def load(source):
     try:
+        source = open(source)
         for line in source:
             if not re.match(r'^(#.*)?$', line):
                 interpret(line)
+        source.close()
         print 'Loaded.'
     except IOError as e:
         print 'Error during loading file: %s' % e
@@ -61,14 +63,30 @@ new_kohonen = command_set_func(lambda kwargs: Kohonen(**kwargs))
 new_cp = command_set_func(lambda kwargs: CounterPropagation(**kwargs))
 
 init = command_get_func(lambda obj, kwargs: obj.init(**kwargs))
+init_bias = command_get_func(lambda obj, kwargs: obj.init_bias(**kwargs))
+
 zero = command_get_func(lambda obj, kwargs: obj.zero())
+zero_bias = command_get_func(lambda obj, kwargs: obj.zero_bias(**kwargs))
+
 locate = command_get_func(lambda obj, kwargs: obj.locate(**kwargs))
 
 
 def compute(**kwargs):
     name = kwargs['name']
     del kwargs['name']
-    print 'Computation of ' + name + '\n\tfor ' + str(kwargs['values']) + '\n\tis ' + str(ENVIRONMENT[name].compute(**kwargs))
+    print 'Computation of ' + name + '\n\tfor values ' + str(kwargs['values']) + '\n\tis ' + str(
+        ENVIRONMENT[name].compute(**kwargs))
+
+
+from main.tools.function import normalize
+
+
+def compute_normalize(**kwargs):
+    name = kwargs['name']
+    del kwargs['name']
+    kwargs['values'] = normalize(kwargs['values'])
+    print 'Computation of ' + name + '\n\tfor normalized values ' + str(kwargs['values']) + '\n\tis ' + str(
+        ENVIRONMENT[name].compute(**kwargs))
 
 
 train_c = command_get_func(lambda obj, kwargs: obj.train_competitive(**kwargs))

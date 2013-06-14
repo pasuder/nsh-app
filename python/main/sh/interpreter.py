@@ -23,11 +23,11 @@ def interpret(line):
                     try:
                         function(**kwargs)
                     except TypeError as e:
-                        traceback.print_exc()
+                        # traceback.print_exc()
                         print_error('Internal error: Error during passing params to function: %s' % e)
                         print 'Usage: %s' % reduce(lambda acc, val: acc + ' ' + val[0], params, line[0])
                     except BaseException as e:
-                        # traceback.print_exc()
+                        traceback.print_exc()
                         print_error('Internal error: Error during executing function: %s' % e)
                 except TypeError as e:
                     # traceback.print_exc()
@@ -100,8 +100,22 @@ commands = {
             ('max_value', parser.parse_float)
         ]
     },
+    'init_bias': {
+        'function': command.init_bias,
+        'params': [
+            ('name', parser.parse_string),
+            ('min_value', parser.parse_float),
+            ('max_value', parser.parse_float)
+        ]
+    },
     'zero': {
         'function': command.zero,
+        'params': [
+            ('name', parser.parse_string)
+        ]
+    },
+    'zero_bias': {
+        'function': command.zero_bias,
         'params': [
             ('name', parser.parse_string)
         ]
@@ -130,10 +144,17 @@ commands = {
             ('values', parser.parse_floats)
         ]
     },
+    'compute_normalize': {
+        'function': command.compute_normalize,
+        'params': [
+            ('name', parser.parse_string),
+            ('values', parser.parse_floats)
+        ]
+    },
     'load': {
         'function': command.load,
         'params': [
-            ('source', parser.parse_file)
+            ('source', parser.parse_string)
         ]
     },
     'train_c': {
@@ -142,7 +163,7 @@ commands = {
             ('name', parser.parse_string),
             ('learning_rate', parser.parse_learning_rate_func),
             ('iterations', parser.parse_int),
-            ('signals', parser.parse_floats)
+            ('signals', parser.parse_signals)
         ]
     },
     'train_n': {
@@ -153,7 +174,7 @@ commands = {
             ('measurement', parser.parse_measurement_func),
             ('neighborhood_radius', parser.parse_neighborhood_func),
             ('iterations', parser.parse_int),
-            ('signals', parser.parse_floats)
+            ('signals', parser.parse_signals)
         ]
     },
     'train_c_cp': {
@@ -163,7 +184,7 @@ commands = {
             ('kohonen_learning_rate', parser.parse_learning_rate_func),
             ('grossberg_learning_rate', parser.parse_learning_rate_func),
             ('iterations', parser.parse_int),
-            ('signals', parser.parse_floats)
+            ('signals', parser.parse_signals)
         ]
     },
     'train_n_cp': {
@@ -175,14 +196,14 @@ commands = {
             ('neighborhood_radius', parser.parse_neighborhood_func),
             ('grossberg_learning_rate', parser.parse_learning_rate_func),
             ('iterations', parser.parse_int),
-            ('signals', parser.parse_floats)
+            ('signals', parser.parse_signals)
         ]
     },
     'multi_train_c': {
         'function': command.multi_train_c,
         'params': [
             ('name', parser.parse_string),
-            ('signals', parser.parse_floats),
+            ('signals', parser.parse_signals),
             ('configs', parser.parse_configs_c)
         ]
     },
@@ -190,7 +211,7 @@ commands = {
         'function': command.multi_train_n,
         'params': [
             ('name', parser.parse_string),
-            ('signals', parser.parse_floats),
+            ('signals', parser.parse_signals),
             ('configs', parser.parse_configs_n)
         ]
     },
@@ -198,7 +219,7 @@ commands = {
         'function': command.multi_train_c_cp,
         'params': [
             ('name', parser.parse_string),
-            ('signals', parser.parse_floats),
+            ('signals', parser.parse_signals),
             ('configs', parser.parse_configs_c_cp)
         ]
     },
@@ -206,7 +227,7 @@ commands = {
         'function': command.multi_train_n_cp,
         'params': [
             ('name', parser.parse_string),
-            ('signals', parser.parse_floats),
+            ('signals', parser.parse_signals),
             ('configs', parser.parse_configs_n_cp)
         ]
     }

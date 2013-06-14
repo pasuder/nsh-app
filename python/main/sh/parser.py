@@ -36,6 +36,10 @@ parse_floats = lambda val: map(parse_float, val.split(','))
 parse_file = io_error_handler(lambda val: open(val), 'Cannot open file')
 
 
+def parse_signals(line):
+    return map(lambda val: parse_floats(val), line.split(';'))
+
+
 def parse_config_c(line):
     return map(lambda val: val[0](val[1]),
                zip([parse_learning_rate_func, parse_int],
@@ -60,7 +64,8 @@ def parse_config_c_cp(line):
 
 def parse_config_n_cp(line):
     return map(lambda val: val[0](val[1]),
-               zip([parse_learning_rate_func, parse_measurement_func, parse_neighborhood_func, parse_learning_rate_func, parse_int],
+               zip([parse_learning_rate_func, parse_measurement_func, parse_neighborhood_func, parse_learning_rate_func,
+                    parse_int],
                    line.split(';')))
 
 

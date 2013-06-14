@@ -5,26 +5,6 @@ import math
 from main.tools import function
 
 
-def hebb(learning_rate):
-    """
-    Hebb learning mode.
-
-    w_{ki}^(j+1) = w_{ki}^(j) + \learning_rate(j) * y_{k}^(j) * x_{i}^(j)
-
-    Keyword arguments:
-    learning_rate       -- function to determine learning rate in next iteration
-    """
-
-    def inner_func(neuron, signals, iteration):
-        result = neuron.compute(signals)
-        neuron.weights = map(lambda obj: obj[0] + learning_rate(iteration) * result * obj[1],
-                             zip(neuron.weights, signals))
-
-    return function.Function(inner_func,
-                             'learning.hebb',
-                             'Hebb learning mode')
-
-
 def instar(learning_rate):
     """
     Instar learning mode.

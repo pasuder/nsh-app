@@ -8,7 +8,7 @@ from main.trainer import kohonen
 class Kohonen(Network):
     def __init__(self, input_func=None, kohonen_func=None, inputs=1, width=1, height=1, output_layers=None):
         # create input layer with `inputs` neurons which have only one input
-        input_layer = [Neuron(activation_func=input_func) for _ in range(0, inputs)]
+        input_layer = [Neuron(activation_func=input_func) for _ in xrange(inputs)]
 
         if height is 1:
             # create 1-dimensional Kohonen output layer
