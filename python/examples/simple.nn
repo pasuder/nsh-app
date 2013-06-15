@@ -1,0 +1,22 @@
+## Creating AND neuron
+new_neuron      AND             threshold_unipolar   2.8147,1.9058   3.7460     0
+
+compute         AND    0.0,0.0
+compute         AND    1.0,0.0
+compute         AND    0.0,1.0
+compute         AND    1.0,1.0
+
+## Creating XOR network
+new_neuron      XOR_Hidden_1    sigmoid_bipolar      0.7827,0.7725   0.3666     0
+new_neuron      XOR_Hidden_2    sigmoid_bipolar      1.4412,1.3907  -1.5368     0
+new_neuron      XOR_Output_1    linear              -1.2556,1.3087   0.8297     0
+
+new_layer       XOR_Hidden      XOR_Hidden_1,XOR_Hidden_2
+new_layer       XOR_Output      XOR_Output_1
+
+new_network     XOR             XOR_Hidden,XOR_Output
+
+compute         XOR    0.0,0.0
+compute         XOR    1.0,0.0
+compute         XOR    0.0,1.0
+compute         XOR    1.0,1.0

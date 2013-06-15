@@ -1,0 +1,35 @@
+## 2D Kohonen network
+new_kohonen     Test2D  sigmoid_unipolar sigmoid_unipolar 4 4 4
+zero            Test2D
+
+init            Test2D  0.0 1.0
+train_c         Test2D  const,0.1                           600 1.0,0.0,0.0,0.0;0.0,1.0,0.0,0.0;0.0,0.0,1.0,0.0;0.0,0.0,0.0,1.0
+show            Test2D
+compute_normalize         Test2D  1.0,0.0,0.0,0.0
+compute_normalize         Test2D  0.0,1.0,0.0,0.0
+compute_normalize         Test2D  0.0,0.0,1.0,0.0
+compute_normalize         Test2D  0.0,0.0,0.0,1.0
+
+init            Test2D  0.0 1.0
+train_n         Test2D  const,0.1 euclidean exponential     600 1.0,0.0,0.0,0.0;0.0,1.0,0.0,0.0;0.0,0.0,1.0,0.0;0.0,0.0,0.0,1.0
+show            Test2D
+compute_normalize         Test2D  1.0,0.0,0.0,0.0
+compute_normalize         Test2D  0.0,1.0,0.0,0.0
+compute_normalize         Test2D  0.0,0.0,1.0,0.0
+compute_normalize         Test2D  0.0,0.0,0.0,1.0
+
+init            Test2D  0.0 1.0
+multi_train_c   Test2D  1.0,0.0,0.0,0.0;0.0,1.0,0.0,0.0;0.0,0.0,1.0,0.0;0.0,0.0,0.0,1.0 const,0.4;100|const,0.2;200|const,0.1;300
+show            Test2D
+compute_normalize         Test2D  1.0,0.0,0.0,0.0
+compute_normalize         Test2D  0.0,1.0,0.0,0.0
+compute_normalize         Test2D  0.0,0.0,1.0,0.0
+compute_normalize         Test2D  0.0,0.0,0.0,1.0
+
+init            Test2D  0.0 1.0
+multi_train_n   Test2D  1.0,0.0,0.0,0.0;0.0,1.0,0.0,0.0;0.0,0.0,1.0,0.0;0.0,0.0,0.0,1.0 const,0.4;euclidean;exponential;100|const,0.2;euclidean;exponential;200|const,0.1;euclidean;exponential;300
+show            Test2D
+compute_normalize         Test2D  1.0,0.0,0.0,0.0
+compute_normalize         Test2D  0.0,1.0,0.0,0.0
+compute_normalize         Test2D  0.0,0.0,1.0,0.0
+compute_normalize         Test2D  0.0,0.0,0.0,1.0

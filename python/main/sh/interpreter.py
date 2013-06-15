@@ -35,8 +35,10 @@ def interpret(line):
             except KeyError as e:
                 # traceback.print_exc()
                 print_error('Internal error: No function/params descriptor: %s' % e)
-        except KeyError:
-            print 'Available commands:\n\t%s' % reduce(lambda acc, val: acc + '\n\t' + val, sorted(commands))
+        except KeyError as e:
+            # traceback.print_exc()
+            print 'Command "' + str(e.message) + '" not found.\nAvailable commands:\n\t%s' % reduce(
+                lambda acc, val: acc + '\n\t' + val, sorted(commands))
 
 
 import command
@@ -142,6 +144,14 @@ commands = {
         'params': [
             ('name', parser.parse_string),
             ('values', parser.parse_floats)
+        ]
+    },
+    'compute_error': {
+        'function': command.compute_error,
+        'params': [
+            ('name', parser.parse_string),
+            ('values', parser.parse_floats),
+            ('targets', parser.parse_floats)
         ]
     },
     'compute_normalize': {

@@ -1,0 +1,19 @@
+## CounterPropagation network
+new_cp          TestCP  sigmoid_unipolar sigmoid_unipolar sigmoid_unipolar 4 4 4 4
+zero            TestCP
+
+init            TestCP  0.0 1.0
+train_c_cp      TestCP  const,0.1 const,0.1                         600 1.0,0.0,0.0,0.0;0.0,1.0,0.0,0.0;0.0,0.0,1.0,0.0;0.0,0.0,0.0,1.0
+show            TestCP
+compute_normalize         TestCP  1.0,0.0,0.0,0.0
+compute_normalize         TestCP  0.0,1.0,0.0,0.0
+compute_normalize         TestCP  0.0,0.0,1.0,0.0
+compute_normalize         TestCP  0.0,0.0,0.0,1.0
+
+init            TestCP  0.0 1.0
+train_n_cp      TestCP  const,0.1 euclidean exponential const,0.1   600 1.0,0.0,0.0,0.0;0.0,1.0,0.0,0.0;0.0,0.0,1.0,0.0;0.0,0.0,0.0,1.0
+show            TestCP
+compute_normalize         TestCP  1.0,0.0,0.0,0.0
+compute_normalize         TestCP  0.0,1.0,0.0,0.0
+compute_normalize         TestCP  0.0,0.0,1.0,0.0
+compute_normalize         TestCP  0.0,0.0,0.0,1.0
