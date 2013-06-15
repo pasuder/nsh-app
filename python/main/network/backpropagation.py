@@ -27,4 +27,4 @@ def compute_error_on_network(network, values, targets):
         errors = compute_error_on_layer(layer, errors)
         all_errors.append(errors)
 
-    return all_errors
+    return all_errors[::-1]

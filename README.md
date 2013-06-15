@@ -8,6 +8,7 @@ Neural network app with shell and batch processing mode.
 ## What I need to have?
 
 *   python
+*   python-mpmath
 
 ## How to run?
 

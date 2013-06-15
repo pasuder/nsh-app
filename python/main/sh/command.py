@@ -1,5 +1,3 @@
-from main.network.backpropagation import compute_error_on_network
-
 __author__ = 'paoolo'
 
 import re
@@ -9,6 +7,8 @@ from interpreter import ENVIRONMENT, interpret
 from main.network.network import Neuron, Layer, Network
 from main.network.kohonen import Kohonen
 from main.network.counterpropagation import CounterPropagation
+from main.network.backpropagation import compute_error_on_network
+from main.trainer import backpropagation
 
 
 def show_all():
@@ -109,6 +109,7 @@ def compute_normalize(**kwargs):
 
 train_c = command_get_func(lambda obj, kwargs: obj.train_competitive(**kwargs))
 train_n = command_get_func(lambda obj, kwargs: obj.train_neighborhood(**kwargs))
+train_bp = command_get_func(lambda obj, kwargs: backpropagation.train_backward(obj, **kwargs))
 
 
 def multi_train(inner_func, params):

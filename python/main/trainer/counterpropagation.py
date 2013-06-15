@@ -11,7 +11,7 @@ def train_competitive(network, signals, iterations, kohonen_learning_rate, gross
     trainer_grossberg = outstar(grossberg_learning_rate)
     signals = map(lambda signal: normalize(signal), signals)
 
-    for iteration in range(1, iterations):
+    for iteration in xrange(iterations):
         random.shuffle(signals)
         for signal in signals:
             winners_indexes = network[1].get_winners_indexes(signal)
@@ -27,7 +27,7 @@ def train_neighborhood(network, signals, iterations, kohonen_learning_rate, gros
     trainer_grossberg = outstar(grossberg_learning_rate)
     signals = map(lambda signal: normalize(signal), signals)
 
-    for iteration in range(1, iterations):
+    for iteration in xrange(iterations):
         random.shuffle(signals)
         for signal in signals:
             winners_indexes = network[1].get_winners_indexes(signal)

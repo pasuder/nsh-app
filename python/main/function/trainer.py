@@ -3,6 +3,7 @@ __author__ = 'paoolo'
 import math
 
 from main.tools import function
+from main.network.backpropagation import compute_error_on_network
 
 
 def instar(learning_rate):
@@ -69,3 +70,27 @@ def neighborhood(learning_rate, measurement, neighborhood_radius):
     return function.Function(inner_func,
                              'learning.neighborhood',
                              'Neighborhood learning mode for Kohonen network')
+
+
+import mpmath
+
+
+def backward(learning_rate):
+    def train_bp_neuron(neuron, error, iteration, signal):
+        # Ugly!
+        derivative = mpmath.diff(neuron.activation_func, error)
+        print str(derivative) + ', ' + str(error) + ', ' + str(neuron.activation_func(error))
+        neuron.weights = map(lambda val: val + learning_rate(iteration) * error * derivative * signal, neuron.weights)
+
+    def train_bp_layer(layer, errors, iteration, signals):
+        map(lambda val: train_bp_neuron(val[0], val[1], iteration, val[2]), zip(layer.neurons, errors, signals))
+
+    def train_bp_network(network, target, iteration, signal):
+        errors = compute_error_on_network(network, signal, target)
+        for layer in network.layers:
+            map(lambda val: train_bp_layer(val[0], val[1], iteration, signal), zip(network.layers, errors[1:]))
+            signal = layer.compute(signal)
+
+    return function.Function(train_bp_network,
+                             'learning.backward',
+                             'Backward error computation learning mode for BackPropagation network')
