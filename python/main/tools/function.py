@@ -19,3 +19,6 @@ class Function(object):
 def normalize(values):
     divisor = math.sqrt(reduce(lambda acc, val: acc + math.pow(val, 2), values))
     return map(lambda value: value / divisor, values)
+
+
+get_indent = lambda indent: ('\t' * indent) + '[\n'

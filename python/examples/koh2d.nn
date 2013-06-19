@@ -1,0 +1,81 @@
+## 2D Kohonen network
+echo ----
+echo 2D Kohonen network
+new_kohonen     Test2D  sigmoid_bipolar sigmoid_bipolar 4 2 2
+zero            Test2D
+
+
+echo ----
+echo Training competitively 2D Kohonen network
+init            Test2D  0.0 1.0
+
+echo Before
+compute         Test2D  1.0,0.0,0.0,0.0
+compute         Test2D  0.0,1.0,0.0,0.0
+compute         Test2D  0.0,0.0,1.0,0.0
+compute         Test2D  0.0,0.0,0.0,1.0
+
+train_c         Test2D  const,0.1 1000 1.0,0.0,0.0,0.0;0.0,1.0,0.0,0.0;0.0,0.0,1.0,0.0;0.0,0.0,0.0,1.0
+
+echo After
+compute         Test2D  1.0,0.0,0.0,0.0
+compute         Test2D  0.0,1.0,0.0,0.0
+compute         Test2D  0.0,0.0,1.0,0.0
+compute         Test2D  0.0,0.0,0.0,1.0
+
+
+echo ----
+echo Training competitively with neighborhood 2D Kohonen network
+init            Test2D  0.0 1.0
+
+echo Before
+compute         Test2D  1.0,0.0,0.0,0.0
+compute         Test2D  0.0,1.0,0.0,0.0
+compute         Test2D  0.0,0.0,1.0,0.0
+compute         Test2D  0.0,0.0,0.0,1.0
+
+train_n         Test2D  const,0.1 euclidean exponential 1000 1.0,0.0,0.0,0.0;0.0,1.0,0.0,0.0;0.0,0.0,1.0,0.0;0.0,0.0,0.0,1.0
+
+echo After
+compute         Test2D  1.0,0.0,0.0,0.0
+compute         Test2D  0.0,1.0,0.0,0.0
+compute         Test2D  0.0,0.0,1.0,0.0
+compute         Test2D  0.0,0.0,0.0,1.0
+
+
+echo ----
+echo Training competitively 2D Kohonen network (multi-train)
+init            Test2D  0.0 1.0
+
+echo Before
+compute         Test2D  1.0,0.0,0.0,0.0
+compute         Test2D  0.0,1.0,0.0,0.0
+compute         Test2D  0.0,0.0,1.0,0.0
+compute         Test2D  0.0,0.0,0.0,1.0
+
+multi_train_c   Test2D  1.0,0.0,0.0,0.0;0.0,1.0,0.0,0.0;0.0,0.0,1.0,0.0;0.0,0.0,0.0,1.0 const,0.4;200|const,0.2;300|const,0.1;500
+
+echo After
+compute         Test2D  1.0,0.0,0.0,0.0
+compute         Test2D  0.0,1.0,0.0,0.0
+compute         Test2D  0.0,0.0,1.0,0.0
+compute         Test2D  0.0,0.0,0.0,1.0
+
+
+echo ----
+echo Training competitively with neighborhood 2D Kohonen network (multi-train)
+init            Test2D  0.0 1.0
+
+echo Before
+compute         Test2D  1.0,0.0,0.0,0.0
+compute         Test2D  0.0,1.0,0.0,0.0
+compute         Test2D  0.0,0.0,1.0,0.0
+compute         Test2D  0.0,0.0,0.0,1.0
+
+multi_train_n   Test2D  1.0,0.0,0.0,0.0;0.0,1.0,0.0,0.0;0.0,0.0,1.0,0.0;0.0,0.0,0.0,1.0 const,0.4;euclidean;exponential;200|const,0.2;euclidean;exponential;300|const,0.1;euclidean;exponential;500
+
+echo After
+compute         Test2D  1.0,0.0,0.0,0.0
+compute         Test2D  0.0,1.0,0.0,0.0
+compute         Test2D  0.0,0.0,1.0,0.0
+compute         Test2D  0.0,0.0,0.0,1.0

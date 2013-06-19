@@ -1,6 +1,6 @@
 __author__ = 'paoolo'
 
-import math
+import mpmath
 
 from main.tools import function
 
@@ -73,7 +73,7 @@ def sigmoid_unipolar(beta=1.0):
     Keyword arguments:
     beta -- epsilon factor value, mostly in range (0, 1] (default 1.0)
     """
-    return function.Function(lambda x: 1.0 / (1.0 + math.exp(-beta * x)),
+    return function.Function(lambda x: 1.0 / (1.0 + mpmath.exp(-beta * x)),
                              'activation.sigmoid_unipolar',
                              'Sigmoid unipolar activation function')
 
@@ -89,7 +89,7 @@ def sigmoid_bipolar(beta=1.0):
     """
 
     def f(x):
-        val = math.exp(-beta * x)
+        val = mpmath.exp(-beta * x)
         return (1.0 - val) / (1.0 + val)
 
     return function.Function(f,
@@ -108,7 +108,7 @@ def gauss(a=1.0, b=1.0, c=1.0):
     b -- linear shift
     c -- divided part
     """
-    div = 2.0 * math.pow(c, 2)
-    return function.Function(lambda x: a * math.e - (math.pow(x - b, 2) / div),
+    div = 2.0 * (c ** 2.0)
+    return function.Function(lambda x: a * mpmath.e - (((x - b) ** 2) / div),
                              'activation.gauss',
                              'Gauss activation function')

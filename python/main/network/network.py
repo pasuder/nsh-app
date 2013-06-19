@@ -8,7 +8,7 @@ from main.function.activation import linear
 
 
 class Neuron(object):
-    def __init__(self, activation_func=linear(1.0), weights=None, bias=1.0, location=None):
+    def __init__(self, activation_func=linear(1.0), weights=None, bias=0.0, location=None):
         """
         Create neuron.
 
@@ -50,6 +50,17 @@ class Neuron(object):
                        (default: 1.0)
         """
         self.weights = [random.random() * (max_value - min_value) + min_value for _ in xrange(len(self.weights))]
+
+    def init_bias(self, min_value=0.0, max_value=1.0):
+        """
+        Init neuron bias.
+
+        Keyword arguments:
+        min_value   -- minimum value of range
+                       (default: 0.0)
+        max_value   -- maximum value of range
+                       (default: 1.0)
+        """
         self.bias = random.random() * (max_value - min_value) + min_value
 
     def zero(self):
@@ -57,6 +68,11 @@ class Neuron(object):
         Make neuron weights zero.
         """
         self.weights = [0.0] * len(self.weights)
+
+    def zero_bias(self):
+        """
+        Make neuron bias zero.
+        """
         self.bias = 0.0
 
     def locate(self, location):
@@ -115,11 +131,29 @@ class Layer(object):
         """
         map(lambda neuron: neuron.init(min_value, max_value), self.neurons)
 
+    def init_bias(self, min_value=0.0, max_value=1.0):
+        """
+        Init bias on layer.
+
+        Keyword arguments:
+        min_value   -- minimum value of range
+                       (default: 0.0)
+        max_value   -- maximum value of range
+                       (default: 1.0)
+        """
+        map(lambda neuron: neuron.init_bias(min_value, max_value), self.neurons)
+
     def zero(self):
         """
         Make weights of layer neurons zero.
         """
         map(lambda neuron: neuron.zero(), self.neurons)
+
+    def zero_bias(self):
+        """
+        Make bias of layer neurons zero.
+        """
+        map(lambda neuron: neuron.zero_bias(), self.neurons)
 
     def get_winners_indexes(self, traits):
         """
@@ -173,7 +207,8 @@ class Network(object):
         values      -- one dimensional sequence of values
                        (default: None)
         """
-        for layer in self.layers:
+        values = map(lambda val: val[0].compute([val[1]]), zip(self.layers[0], values))
+        for layer in self.layers[1:]:
             values = layer.compute(values)
         return values
 
@@ -189,11 +224,29 @@ class Network(object):
         """
         map(lambda layer: layer.init(min_value, max_value), self.layers)
 
+    def init_bias(self, min_value=0.0, max_value=1.0):
+        """
+        Init bias on network.
+
+        Keyword arguments:
+        min_value   -- minimum value of range
+                       (default: 0.0)
+        max_value   -- maximum value of range
+                       (default: 1.0)
+        """
+        map(lambda layer: layer.init_bias(min_value, max_value), self.layers)
+
     def zero(self):
         """
         Make all weights zero.
         """
         map(lambda layer: layer.zero(), self.layers)
+
+    def zero_bias(self):
+        """
+        Make all bias zero.
+        """
+        map(lambda layer: layer.zero_bias(), self.layers)
 
     def __str__(self):
         return 'Network{' + reduce(lambda acc, layer: acc + '\n' + str(layer), self.layers, '') + '\n}'

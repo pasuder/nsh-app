@@ -1,0 +1,80 @@
+## CounterPropagation network
+echo ----
+echo CounterPropagation network
+new_cp          TestCP  sigmoid_bipolar sigmoid_bipolar sigmoid_bipolar 4 4 4 4
+zero            TestCP
+
+
+echo ----
+echo Training competitively CP network
+init            TestCP  0.0 1.0
+
+echo Before
+compute_normalize         TestCP  1.0,0.0,0.0,0.0
+compute_normalize         TestCP  0.0,1.0,0.0,0.0
+compute_normalize         TestCP  0.0,0.0,1.0,0.0
+compute_normalize         TestCP  0.0,0.0,0.0,1.0
+
+train_c_cp      TestCP  const,0.1 const,0.1 1000 1.0,0.0,0.0,0.0;0.0,1.0,0.0,0.0;0.0,0.0,1.0,0.0;0.0,0.0,0.0,1.0
+
+echo After
+compute_normalize         TestCP  1.0,0.0,0.0,0.0
+compute_normalize         TestCP  0.0,1.0,0.0,0.0
+compute_normalize         TestCP  0.0,0.0,1.0,0.0
+compute_normalize         TestCP  0.0,0.0,0.0,1.0
+
+
+echo ----
+echo Training competitively with neighborhood CP network
+init            TestCP  0.0 1.0
+
+echo Before
+compute_normalize         TestCP  1.0,0.0,0.0,0.0
+compute_normalize         TestCP  0.0,1.0,0.0,0.0
+compute_normalize         TestCP  0.0,0.0,1.0,0.0
+compute_normalize         TestCP  0.0,0.0,0.0,1.0
+
+train_n_cp      TestCP  const,0.1 euclidean exponential const,0.1 1000 1.0,0.0,0.0,0.0;0.0,1.0,0.0,0.0;0.0,0.0,1.0,0.0;0.0,0.0,0.0,1.0
+
+echo After
+compute_normalize         TestCP  1.0,0.0,0.0,0.0
+compute_normalize         TestCP  0.0,1.0,0.0,0.0
+compute_normalize         TestCP  0.0,0.0,1.0,0.0
+compute_normalize         TestCP  0.0,0.0,0.0,1.0
+
+
+echo ----
+echo Training competitively CP network (multi-train)
+
+echo Before
+compute_normalize         TestCP  1.0,0.0,0.0,0.0
+compute_normalize         TestCP  0.0,1.0,0.0,0.0
+compute_normalize         TestCP  0.0,0.0,1.0,0.0
+compute_normalize         TestCP  0.0,0.0,0.0,1.0
+
+multi_train_c_cp          TestCP  1.0,0.0,0.0,0.0;0.0,1.0,0.0,0.0;0.0,0.0,1.0,0.0;0.0,0.0,0.0,1.0 const,0.7;200|const,0.5;300|const,0.3;500
+
+echo After
+compute_normalize         TestCP  1.0,0.0,0.0,0.0
+compute_normalize         TestCP  0.0,1.0,0.0,0.0
+compute_normalize         TestCP  0.0,0.0,1.0,0.0
+compute_normalize         TestCP  0.0,0.0,0.0,1.0
+
+
+echo ----
+echo Training competitively with neighborhood CP network (multi-train)
+init            TestCP  0.0 1.0
+
+echo Before
+compute_normalize         TestCP  1.0,0.0,0.0,0.0
+compute_normalize         TestCP  0.0,1.0,0.0,0.0
+compute_normalize         TestCP  0.0,0.0,1.0,0.0
+compute_normalize         TestCP  0.0,0.0,0.0,1.0
+
+multi_train_n_cp          TestCP  1.0,0.0,0.0,0.0;0.0,1.0,0.0,0.0;0.0,0.0,1.0,0.0;0.0,0.0,0.0,1.0 const,0.7;euclidean;exponential;const,0.4;200|const,0.5;euclidean;exponential;const,0.2;300|const,0.3;euclidean;exponential;const,0.1;500
+
+echo After
+compute_normalize         TestCP  1.0,0.0,0.0,0.0
+compute_normalize         TestCP  0.0,1.0,0.0,0.0
+compute_normalize         TestCP  0.0,0.0,1.0,0.0
+compute_normalize         TestCP  0.0,0.0,0.0,1.0

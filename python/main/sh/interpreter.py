@@ -1,3 +1,4 @@
+import re
 import traceback
 
 __author__ = 'paoolo'
@@ -14,29 +15,34 @@ def print_error(line):
 def interpret(line):
     line = line.split()
     if len(line) > 0:
-        try:
-            command = commands[line[0]]
+        if re.match('echo', line[0]):
+            print ' '.join(line[1:])
+        else:
             try:
-                function, params = command['function'], command['params']
+                command = commands[line[0]]
                 try:
-                    kwargs = {key[0]: key[1](value) for (key, value) in zip(params, line[1:])}
+                    function, params = command['function'], command['params']
                     try:
-                        function(**kwargs)
+                        kwargs = {key[0]: key[1](value) for (key, value) in zip(params, line[1:])}
+                        try:
+                            function(**kwargs)
+                        except TypeError as e:
+                            traceback.print_exc()
+                            print_error('Internal error: Error during passing params to function: %s' % e)
+                            print 'Usage: %s' % reduce(lambda acc, val: acc + ' ' + val[0], params, line[0])
+                        except BaseException as e:
+                            traceback.print_exc()
+                            print_error('Internal error: Error during executing function: %s' % e)
                     except TypeError as e:
-                        traceback.print_exc()
-                        print_error('Internal error: Error during passing params to function: %s' % e)
-                        print 'Usage: %s' % reduce(lambda acc, val: acc + ' ' + val[0], params, line[0])
-                    except BaseException as e:
                         # traceback.print_exc()
-                        print_error('Internal error: Error during executing function: %s' % e)
-                except TypeError as e:
+                        print_error('Internal error: Error during parsing params: %s' % e)
+                except KeyError as e:
                     # traceback.print_exc()
-                    print_error('Internal error: Error during parsing params: %s' % e)
+                    print_error('Internal error: No function/params descriptor: %s' % e)
             except KeyError as e:
                 # traceback.print_exc()
-                print_error('Internal error: No function/params descriptor: %s' % e)
-        except KeyError:
-            print 'Available commands:\n\t%s' % reduce(lambda acc, val: acc + '\n\t' + val, sorted(commands))
+                print 'Command "' + str(e.message) + '" not found.\nAvailable commands:\n\t%s' % reduce(
+                    lambda acc, val: acc + '\n\t' + val, sorted(commands))
 
 
 import command
@@ -100,8 +106,22 @@ commands = {
             ('max_value', parser.parse_float)
         ]
     },
+    'init_bias': {
+        'function': command.init_bias,
+        'params': [
+            ('name', parser.parse_string),
+            ('min_value', parser.parse_float),
+            ('max_value', parser.parse_float)
+        ]
+    },
     'zero': {
         'function': command.zero,
+        'params': [
+            ('name', parser.parse_string)
+        ]
+    },
+    'zero_bias': {
+        'function': command.zero_bias,
         'params': [
             ('name', parser.parse_string)
         ]
@@ -130,10 +150,33 @@ commands = {
             ('values', parser.parse_floats)
         ]
     },
+    'compute_error': {
+        'function': command.compute_error,
+        'params': [
+            ('name', parser.parse_string),
+            ('values', parser.parse_floats),
+            ('targets', parser.parse_floats)
+        ]
+    },
+    'compute_normalize': {
+        'function': command.compute_normalize,
+        'params': [
+            ('name', parser.parse_string),
+            ('values', parser.parse_floats)
+        ]
+    },
+    'compute_error_normalize': {
+        'function': command.compute_error_normalize,
+        'params': [
+            ('name', parser.parse_string),
+            ('values', parser.parse_floats),
+            ('targets', parser.parse_floats)
+        ]
+    },
     'load': {
         'function': command.load,
         'params': [
-            ('source', parser.parse_file)
+            ('source', parser.parse_string)
         ]
     },
     'train_c': {
@@ -142,7 +185,7 @@ commands = {
             ('name', parser.parse_string),
             ('learning_rate', parser.parse_learning_rate_func),
             ('iterations', parser.parse_int),
-            ('signals', parser.parse_floats)
+            ('signals', parser.parse_signals)
         ]
     },
     'train_n': {
@@ -153,7 +196,7 @@ commands = {
             ('measurement', parser.parse_measurement_func),
             ('neighborhood_radius', parser.parse_neighborhood_func),
             ('iterations', parser.parse_int),
-            ('signals', parser.parse_floats)
+            ('signals', parser.parse_signals)
         ]
     },
     'train_c_cp': {
@@ -163,7 +206,7 @@ commands = {
             ('kohonen_learning_rate', parser.parse_learning_rate_func),
             ('grossberg_learning_rate', parser.parse_learning_rate_func),
             ('iterations', parser.parse_int),
-            ('signals', parser.parse_floats)
+            ('signals', parser.parse_signals)
         ]
     },
     'train_n_cp': {
@@ -175,14 +218,35 @@ commands = {
             ('neighborhood_radius', parser.parse_neighborhood_func),
             ('grossberg_learning_rate', parser.parse_learning_rate_func),
             ('iterations', parser.parse_int),
-            ('signals', parser.parse_floats)
+            ('signals', parser.parse_signals)
+        ]
+    },
+    'train_bp': {
+        'function': command.train_bp,
+        'params': [
+            ('name', parser.parse_string),
+            ('learning_rate', parser.parse_learning_rate_func),
+            ('iterations', parser.parse_int),
+            ('signals', parser.parse_signals),
+            ('targets', parser.parse_signals)
+        ]
+    },
+    'train_bp_m': {
+        'function': command.train_bp_m,
+        'params': [
+            ('name', parser.parse_string),
+            ('learning_rate', parser.parse_learning_rate_func),
+            ('momentum_rate', parser.parse_learning_rate_func),
+            ('iterations', parser.parse_int),
+            ('signals', parser.parse_signals),
+            ('targets', parser.parse_signals)
         ]
     },
     'multi_train_c': {
         'function': command.multi_train_c,
         'params': [
             ('name', parser.parse_string),
-            ('signals', parser.parse_floats),
+            ('signals', parser.parse_signals),
             ('configs', parser.parse_configs_c)
         ]
     },
@@ -190,7 +254,7 @@ commands = {
         'function': command.multi_train_n,
         'params': [
             ('name', parser.parse_string),
-            ('signals', parser.parse_floats),
+            ('signals', parser.parse_signals),
             ('configs', parser.parse_configs_n)
         ]
     },
@@ -198,7 +262,7 @@ commands = {
         'function': command.multi_train_c_cp,
         'params': [
             ('name', parser.parse_string),
-            ('signals', parser.parse_floats),
+            ('signals', parser.parse_signals),
             ('configs', parser.parse_configs_c_cp)
         ]
     },
@@ -206,8 +270,26 @@ commands = {
         'function': command.multi_train_n_cp,
         'params': [
             ('name', parser.parse_string),
-            ('signals', parser.parse_floats),
+            ('signals', parser.parse_signals),
             ('configs', parser.parse_configs_n_cp)
+        ]
+    },
+    'multi_train_bp': {
+        'function': command.multi_train_bp,
+        'params': [
+            ('name', parser.parse_string),
+            ('signals', parser.parse_signals),
+            ('targets', parser.parse_signals),
+            ('configs', parser.parse_configs_bp)
+        ]
+    },
+    'multi_train_bp_m': {
+        'function': command.multi_train_bp_m,
+        'params': [
+            ('name', parser.parse_string),
+            ('signals', parser.parse_signals),
+            ('targets', parser.parse_signals),
+            ('configs', parser.parse_configs_bp_m)
         ]
     }
 }

@@ -1,28 +1,11 @@
+import mpmath
+
 __author__ = 'paoolo'
 
 import math
 
 from main.tools import function
-
-
-def hebb(learning_rate):
-    """
-    Hebb learning mode.
-
-    w_{ki}^(j+1) = w_{ki}^(j) + \learning_rate(j) * y_{k}^(j) * x_{i}^(j)
-
-    Keyword arguments:
-    learning_rate       -- function to determine learning rate in next iteration
-    """
-
-    def inner_func(neuron, signals, iteration):
-        result = neuron.compute(signals)
-        neuron.weights = map(lambda obj: obj[0] + learning_rate(iteration) * result * obj[1],
-                             zip(neuron.weights, signals))
-
-    return function.Function(inner_func,
-                             'learning.hebb',
-                             'Hebb learning mode')
+from main.network.backpropagation import compute_error_on_network
 
 
 def instar(learning_rate):
@@ -89,3 +72,52 @@ def neighborhood(learning_rate, measurement, neighborhood_radius):
     return function.Function(inner_func,
                              'learning.neighborhood',
                              'Neighborhood learning mode for Kohonen network')
+
+
+def get_train_bp_network(train_bp_neuron):
+    def train_bp_layer(layer, errors_per_neuron, iteration, signals):
+        map(lambda val: train_bp_neuron(val[0], val[1], iteration, signals), zip(layer.neurons, errors_per_neuron))
+
+    def train_bp_network(network, target, iteration, signals):
+        errors_per_layer = compute_error_on_network(network, signals, target)
+        for layer in network.layers:
+            new_signal = layer.compute(signals)
+            map(lambda error: train_bp_layer(layer, error, iteration, signals), errors_per_layer[1:])
+            signals = new_signal
+
+    return train_bp_network
+
+
+def backward(learning_rate):
+    def train_bp_neuron(neuron, error, iteration, signals):
+        # Ugly!
+        summed = math.fsum(map(lambda entry: entry[0] * entry[1], zip(signals, neuron.weights))) - neuron.bias
+        derivative = mpmath.diff(neuron.activation_func, summed)
+        neuron.weights = map(lambda val: val[0] + learning_rate(iteration) * error * derivative * val[1],
+                             zip(neuron.weights, signals))
+
+    return function.Function(get_train_bp_network(train_bp_neuron),
+                             'learning.backward',
+                             'Backward error computation learning mode for BackPropagation network')
+
+
+def backward_momentum(learning_rate, momentum_rate):
+    def train_bp_neuron(neuron, error, iteration, signals):
+        # Ugly!
+        summed = math.fsum(map(lambda entry: entry[0] * entry[1], zip(signals, neuron.weights))) - neuron.bias
+        derivative = mpmath.diff(neuron.activation_func, summed)
+        old_weights = neuron.weights
+        if hasattr(neuron, 'old_weights'):
+            neuron.weights = map(
+                lambda val: val[0] + learning_rate(iteration) * error * derivative * momentum_rate(iteration) *
+                                     (val[0] - val[2]) * val[1],
+                zip(neuron.weights, signals, neuron.old_weights))
+        else:
+            neuron.weights = map(
+                lambda val: val[0] + learning_rate(iteration) * error * derivative * val[1],
+                zip(neuron.weights, signals))
+        neuron.old_weights = old_weights
+
+    return function.Function(get_train_bp_network(train_bp_neuron),
+                             'learning.backward_momentum',
+                             'Backward error computation learning mode for BackPropagation network')

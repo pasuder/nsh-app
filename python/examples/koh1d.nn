@@ -1,0 +1,65 @@
+## 1D Kohonen network
+echo ----
+echo 1D Kohonen network
+new_kohonen     Test1D  sigmoid_bipolar sigmoid_bipolar 2 2 1
+zero            Test1D
+
+
+echo ----
+echo Training competitively 1D Kohonen network
+init            Test1D  0.0 1.0
+
+echo Before
+compute         Test1D  1.0,0.0
+compute         Test1D  0.0,1.0
+
+train_c         Test1D  const,0.7 1000 1.0,0.0;0.0,1.0
+
+echo After
+compute         Test1D  1.0,0.0
+compute         Test1D  0.0,1.0
+
+
+echo ----
+echo Training competitively with neighborhood 1D Kohonen network
+init            Test1D  0.0 1.0
+
+echo Before
+compute         Test1D  1.0,0.0
+compute         Test1D  0.0,1.0
+
+train_n         Test1D  const,0.7 euclidean exponential 1000 1.0,0.0;0.0,1.0
+
+echo After
+compute         Test1D  1.0,0.0
+compute         Test1D  0.0,1.0
+
+
+echo ----
+echo Training competitively 1D Kohonen network (multi-train)
+init            Test1D  0.0 1.0
+
+echo Before
+compute         Test1D  1.0,0.0
+compute         Test1D  0.0,1.0
+
+multi_train_c   Test1D  1.0,0.0;0.0,1.0 const,0.7;200|const,0.5;300|const,0.3;500
+
+echo After
+compute         Test1D  1.0,0.0
+compute         Test1D  0.0,1.0
+
+
+echo ----
+echo Training competitively with neighborhood 1D Kohonen network (multi-train)
+init            Test1D  0.0 1.0
+
+echo Before
+compute         Test1D  1.0,0.0
+compute         Test1D  0.0,1.0
+
+multi_train_n   Test1D  1.0,0.0;0.0,1.0 const,0.7;euclidean;exponential;200|const,0.5;euclidean;exponential,1.0;300|const,0.3;euclidean;exponential;500
+
+echo After
+compute         Test1D  1.0,0.0
+compute         Test1D  0.0,1.0
