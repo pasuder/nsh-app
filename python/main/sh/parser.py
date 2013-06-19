@@ -75,12 +75,12 @@ parse_configs_n_cp = lambda val: map(parse_config_n, val.split('|'))
 
 def parse_config_bp(line):
     return map(lambda val: val[0](val[1]),
-               zip([parse_learning_rate_func], line.split(';')))
+               zip([parse_learning_rate_func, parse_int], line.split(';')))
 
 
 def parse_config_bp_m(line):
     return map(lambda val: val[0](val[1]),
-               zip([parse_learning_rate_func, parse_learning_rate_func], line.split(';')))
+               zip([parse_learning_rate_func, parse_learning_rate_func, parse_int], line.split(';')))
 
 
 parse_configs_bp = lambda val: map(parse_config_bp, val.split('|'))

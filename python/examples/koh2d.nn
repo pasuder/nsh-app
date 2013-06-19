@@ -1,34 +1,80 @@
 ## 2D Kohonen network
+echo ----
+echo 2D Kohonen network
 new_kohonen     Test2D  sigmoid_unipolar sigmoid_unipolar 4 4 4
 zero            Test2D
 
+
+echo ----
+echo Training competitively 2D Kohonen network
 init            Test2D  0.0 1.0
+
+echo Before
+compute_normalize         Test2D  1.0,0.0,0.0,0.0
+compute_normalize         Test2D  0.0,1.0,0.0,0.0
+compute_normalize         Test2D  0.0,0.0,1.0,0.0
+compute_normalize         Test2D  0.0,0.0,0.0,1.0
+
 train_c         Test2D  const,0.1                           600 1.0,0.0,0.0,0.0;0.0,1.0,0.0,0.0;0.0,0.0,1.0,0.0;0.0,0.0,0.0,1.0
-show            Test2D
+
+echo After
 compute_normalize         Test2D  1.0,0.0,0.0,0.0
 compute_normalize         Test2D  0.0,1.0,0.0,0.0
 compute_normalize         Test2D  0.0,0.0,1.0,0.0
 compute_normalize         Test2D  0.0,0.0,0.0,1.0
 
+
+echo ----
+echo Training competitively with neighborhood 2D Kohonen network
 init            Test2D  0.0 1.0
+
+echo Before
+compute_normalize         Test2D  1.0,0.0,0.0,0.0
+compute_normalize         Test2D  0.0,1.0,0.0,0.0
+compute_normalize         Test2D  0.0,0.0,1.0,0.0
+compute_normalize         Test2D  0.0,0.0,0.0,1.0
+
 train_n         Test2D  const,0.1 euclidean exponential     600 1.0,0.0,0.0,0.0;0.0,1.0,0.0,0.0;0.0,0.0,1.0,0.0;0.0,0.0,0.0,1.0
-show            Test2D
+
+echo After
 compute_normalize         Test2D  1.0,0.0,0.0,0.0
 compute_normalize         Test2D  0.0,1.0,0.0,0.0
 compute_normalize         Test2D  0.0,0.0,1.0,0.0
 compute_normalize         Test2D  0.0,0.0,0.0,1.0
 
+
+echo ----
+echo Training competitively 2D Kohonen network (multi-train)
 init            Test2D  0.0 1.0
+
+echo Before
+compute_normalize         Test2D  1.0,0.0,0.0,0.0
+compute_normalize         Test2D  0.0,1.0,0.0,0.0
+compute_normalize         Test2D  0.0,0.0,1.0,0.0
+compute_normalize         Test2D  0.0,0.0,0.0,1.0
+
 multi_train_c   Test2D  1.0,0.0,0.0,0.0;0.0,1.0,0.0,0.0;0.0,0.0,1.0,0.0;0.0,0.0,0.0,1.0 const,0.4;100|const,0.2;200|const,0.1;300
-show            Test2D
+
+echo After
 compute_normalize         Test2D  1.0,0.0,0.0,0.0
 compute_normalize         Test2D  0.0,1.0,0.0,0.0
 compute_normalize         Test2D  0.0,0.0,1.0,0.0
 compute_normalize         Test2D  0.0,0.0,0.0,1.0
 
+
+echo ----
+echo Training competitively with neighborhood 2D Kohonen network (multi-train)
 init            Test2D  0.0 1.0
+
+echo Before
+compute_normalize         Test2D  1.0,0.0,0.0,0.0
+compute_normalize         Test2D  0.0,1.0,0.0,0.0
+compute_normalize         Test2D  0.0,0.0,1.0,0.0
+compute_normalize         Test2D  0.0,0.0,0.0,1.0
+
 multi_train_n   Test2D  1.0,0.0,0.0,0.0;0.0,1.0,0.0,0.0;0.0,0.0,1.0,0.0;0.0,0.0,0.0,1.0 const,0.4;euclidean;exponential;100|const,0.2;euclidean;exponential;200|const,0.1;euclidean;exponential;300
-show            Test2D
+
+echo After
 compute_normalize         Test2D  1.0,0.0,0.0,0.0
 compute_normalize         Test2D  0.0,1.0,0.0,0.0
 compute_normalize         Test2D  0.0,0.0,1.0,0.0

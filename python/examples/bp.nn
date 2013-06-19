@@ -1,4 +1,6 @@
 ## Creating BP network
+echo Creating BP network
+
 new_neuron      BPNeuron11 sigmoid_bipolar 0.0 0.0 0
 new_neuron      BPNeuron12 sigmoid_bipolar 0.0 0.0 0
 
@@ -14,17 +16,86 @@ new_layer       BPLayer3 BPNeuron31
 
 new_network     TestBP BPLayer1,BPLayer2,BPLayer3
 
+
+### Testing back-propagation
+echo ---
+echo Testing back-propagation
+
 init            TestBP 0.0 1.0
+#show            TestBP
 
-show            TestBP
+#compute_error_normalize TestBP 0.123,0.456 0.2
+#compute_error_normalize TestBP 0.321,0.654 0.4
+
+train_bp        TestBP const,0.7            1000 0.123,0.456;0.321,0.654 0.2;0.4
+
+#show            TestBP
 
 compute_error_normalize TestBP 0.123,0.456 0.2
 compute_error_normalize TestBP 0.321,0.654 0.4
 
-train_bp        TestBP const,0.7 1000 0.123,0.456 0.2;0.4
-train_bp_m      TestBP const,0.7 const,0.4 1000 0.123,0.456;0.321,0.654 0.2;0.4
+compute_normalize TestBP 0.123,0.456
+compute_normalize TestBP 0.321,0.654
+
+
+### Testing back-propagation with momentum
+echo ---
+echo Testing back-propagation with momentum
+
+init            TestBP 0.0 1.0
+#show            TestBP
+
+#compute_error_normalize TestBP 0.123,0.456 0.2
+#compute_error_normalize TestBP 0.321,0.654 0.4
+
+train_bp_m      TestBP const,0.7 const,0.4  1000 0.123,0.456;0.321,0.654 0.2;0.4
+
+#show            TestBP
 
 compute_error_normalize TestBP 0.123,0.456 0.2
 compute_error_normalize TestBP 0.321,0.654 0.4
 
-show            TestBP
+compute_normalize TestBP 0.123,0.456
+compute_normalize TestBP 0.321,0.654
+
+
+### Testing back-propagation (multi-train)
+echo ---
+echo Testing back-propagation (multi-train)
+
+init            TestBP 0.0 1.0
+#show            TestBP
+
+#compute_error_normalize TestBP 0.123,0.456 0.2
+#compute_error_normalize TestBP 0.321,0.654 0.4
+
+multi_train_bp      TestBP 0.123,0.456;0.321,0.654 0.2;0.4 const,0.7;1000|const,0.5;2000
+
+#show            TestBP
+
+compute_error_normalize TestBP 0.123,0.456 0.2
+compute_error_normalize TestBP 0.321,0.654 0.4
+
+compute_normalize TestBP 0.123,0.456
+compute_normalize TestBP 0.321,0.654
+
+
+### Testing back-propagation with momentum (multi-train)
+echo ---
+echo Testing back-propagation with momentum (multi-train)
+
+init            TestBP 0.0 1.0
+#show            TestBP
+
+#compute_error_normalize TestBP 0.123,0.456 0.2
+#compute_error_normalize TestBP 0.321,0.654 0.4
+
+multi_train_bp_m    TestBP 0.123,0.456;0.321,0.654 0.2;0.4 const,0.7;const,0.4;1000|const,0.5;const,0.3;2000
+
+#show            TestBP
+
+compute_error_normalize TestBP 0.123,0.456 0.2
+compute_error_normalize TestBP 0.321,0.654 0.4
+
+compute_normalize TestBP 0.123,0.456
+compute_normalize TestBP 0.321,0.654

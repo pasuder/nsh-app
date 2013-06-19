@@ -1,3 +1,4 @@
+import re
 import traceback
 
 __author__ = 'paoolo'
@@ -14,31 +15,34 @@ def print_error(line):
 def interpret(line):
     line = line.split()
     if len(line) > 0:
-        try:
-            command = commands[line[0]]
+        if re.match('echo', line[0]):
+            print ' '.join(line[1:])
+        else:
             try:
-                function, params = command['function'], command['params']
+                command = commands[line[0]]
                 try:
-                    kwargs = {key[0]: key[1](value) for (key, value) in zip(params, line[1:])}
+                    function, params = command['function'], command['params']
                     try:
-                        function(**kwargs)
+                        kwargs = {key[0]: key[1](value) for (key, value) in zip(params, line[1:])}
+                        try:
+                            function(**kwargs)
+                        except TypeError as e:
+                            traceback.print_exc()
+                            print_error('Internal error: Error during passing params to function: %s' % e)
+                            print 'Usage: %s' % reduce(lambda acc, val: acc + ' ' + val[0], params, line[0])
+                        except BaseException as e:
+                            traceback.print_exc()
+                            print_error('Internal error: Error during executing function: %s' % e)
                     except TypeError as e:
-                        traceback.print_exc()
-                        print_error('Internal error: Error during passing params to function: %s' % e)
-                        print 'Usage: %s' % reduce(lambda acc, val: acc + ' ' + val[0], params, line[0])
-                    except BaseException as e:
-                        traceback.print_exc()
-                        print_error('Internal error: Error during executing function: %s' % e)
-                except TypeError as e:
+                        # traceback.print_exc()
+                        print_error('Internal error: Error during parsing params: %s' % e)
+                except KeyError as e:
                     # traceback.print_exc()
-                    print_error('Internal error: Error during parsing params: %s' % e)
+                    print_error('Internal error: No function/params descriptor: %s' % e)
             except KeyError as e:
                 # traceback.print_exc()
-                print_error('Internal error: No function/params descriptor: %s' % e)
-        except KeyError as e:
-            # traceback.print_exc()
-            print 'Command "' + str(e.message) + '" not found.\nAvailable commands:\n\t%s' % reduce(
-                lambda acc, val: acc + '\n\t' + val, sorted(commands))
+                print 'Command "' + str(e.message) + '" not found.\nAvailable commands:\n\t%s' % reduce(
+                    lambda acc, val: acc + '\n\t' + val, sorted(commands))
 
 
 import command
