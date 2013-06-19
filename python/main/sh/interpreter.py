@@ -223,8 +223,19 @@ commands = {
             ('name', parser.parse_string),
             ('learning_rate', parser.parse_learning_rate_func),
             ('iterations', parser.parse_int),
-            ('signal', parser.parse_floats),
-            ('target', parser.parse_floats)
+            ('signals', parser.parse_signals),
+            ('targets', parser.parse_signals)
+        ]
+    },
+    'train_bp_m': {
+        'function': command.train_bp_m,
+        'params': [
+            ('name', parser.parse_string),
+            ('learning_rate', parser.parse_learning_rate_func),
+            ('momentum_rate', parser.parse_learning_rate_func),
+            ('iterations', parser.parse_int),
+            ('signals', parser.parse_signals),
+            ('targets', parser.parse_signals)
         ]
     },
     'multi_train_c': {
@@ -257,6 +268,24 @@ commands = {
             ('name', parser.parse_string),
             ('signals', parser.parse_signals),
             ('configs', parser.parse_configs_n_cp)
+        ]
+    },
+    'multi_train_bp': {
+        'function': command.multi_train_bp,
+        'params': [
+            ('name', parser.parse_string),
+            ('signals', parser.parse_signals),
+            ('targets', parser.parse_signals),
+            ('configs', parser.parse_configs_bp)
+        ]
+    },
+    'multi_train_bp_m': {
+        'function': command.multi_train_bp_m,
+        'params': [
+            ('name', parser.parse_string),
+            ('signals', parser.parse_signals),
+            ('targets', parser.parse_signals),
+            ('configs', parser.parse_configs_bp_m)
         ]
     }
 }

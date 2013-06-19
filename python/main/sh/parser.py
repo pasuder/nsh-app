@@ -71,3 +71,17 @@ def parse_config_n_cp(line):
 
 parse_configs_c_cp = lambda val: map(parse_config_c, val.split('|'))
 parse_configs_n_cp = lambda val: map(parse_config_n, val.split('|'))
+
+
+def parse_config_bp(line):
+    return map(lambda val: val[0](val[1]),
+               zip([parse_learning_rate_func], line.split(';')))
+
+
+def parse_config_bp_m(line):
+    return map(lambda val: val[0](val[1]),
+               zip([parse_learning_rate_func, parse_learning_rate_func], line.split(';')))
+
+
+parse_configs_bp = lambda val: map(parse_config_bp, val.split('|'))
+parse_configs_bp_m = lambda val: map(parse_config_bp_m, val.split('|'))

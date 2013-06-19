@@ -125,6 +125,7 @@ def compute_error_normalize(**kwargs):
 train_c = command_get_func(lambda obj, kwargs: obj.train_competitive(**kwargs))
 train_n = command_get_func(lambda obj, kwargs: obj.train_neighborhood(**kwargs))
 train_bp = command_get_func(lambda obj, kwargs: backpropagation.train_backward(obj, **kwargs))
+train_bp_m = command_get_func(lambda obj, kwargs: backpropagation.train_backward_momentum(obj, **kwargs))
 
 
 def multi_train(inner_func, params):
@@ -135,6 +136,10 @@ def multi_train(inner_func, params):
                 inner_kwargs = {key: value for (key, value) in zip(params, config[0:-1])}
                 inner_kwargs['iterations'] = config[-1]
                 inner_kwargs['signals'] = kwargs['signals']
+                try:
+                    inner_kwargs['targets'] = kwargs['targets']
+                except KeyError:
+                    pass
                 inner_func(obj, inner_kwargs)
         except AttributeError:
             print 'Cannot train network'
@@ -142,7 +147,10 @@ def multi_train(inner_func, params):
     return func
 
 
+TARGETS = 'targets'
+
 LEARNING_RATE = 'learning_rate'
+MOMENTUM_RATE = 'momentum_rate'
 MEASUREMENT = 'measurement'
 NEIGHBORHOOD_RADIUS = 'neighborhood_radius'
 GROSSBERG_PARAMETER = 'grossberg_parameter'
@@ -164,4 +172,14 @@ multi_train_c_cp = multi_train(
 multi_train_n_cp = multi_train(
     inner_func=lambda obj, kwargs: obj.train_neighborhood(**kwargs),
     params=[LEARNING_RATE, MEASUREMENT, NEIGHBORHOOD_RADIUS, GROSSBERG_PARAMETER]
+)
+
+multi_train_bp = multi_train(
+    inner_func=lambda obj, kwargs: backpropagation.train_backward(obj, **kwargs),
+    params=[LEARNING_RATE]
+)
+
+multi_train_bp_m = multi_train(
+    inner_func=lambda obj, kwargs: backpropagation.train_backward_momentum(obj, **kwargs),
+    params=[LEARNING_RATE, MOMENTUM_RATE]
 )
