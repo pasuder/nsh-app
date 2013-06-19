@@ -1,3 +1,5 @@
+import mpmath
+
 __author__ = 'paoolo'
 
 import math
@@ -74,8 +76,10 @@ def neighborhood(learning_rate, measurement, neighborhood_radius):
 
 def backward(learning_rate):
     def train_bp_neuron(neuron, error, iteration, signals):
-        # Ugly! derivative = mpmath.diff(neuron.activation_func, error)
-        neuron.weights = map(lambda val: val[0] + learning_rate(iteration) * error * val[1],
+        # Ugly!
+        summed = math.fsum(map(lambda entry: entry[0] * entry[1], zip(signals, neuron.weights))) - neuron.bias
+        derivative = mpmath.diff(neuron.activation_func, summed)
+        neuron.weights = map(lambda val: val[0] + learning_rate(iteration) * error * derivative * val[1],
                              zip(neuron.weights, signals))
 
     def train_bp_layer(layer, errors_per_neuron, iteration, signals):
