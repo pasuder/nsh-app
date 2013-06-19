@@ -107,6 +107,21 @@ def compute_normalize(**kwargs):
         ENVIRONMENT[name].compute(**kwargs))
 
 
+def compute_error_normalize(**kwargs):
+    name = kwargs['name']
+    del kwargs['name']
+    network = ENVIRONMENT[name]
+    if isinstance(network, Network):
+        kwargs['network'] = network
+        kwargs['values'] = normalize(kwargs['values'])
+        error = compute_error_on_network(**kwargs)
+        print 'Error of computation on network ' + name \
+              + '\n\tfor values ' + str(kwargs['values']) \
+              + '\n\tis ' + str(error)
+    else:
+        print '"' + name + '" is not a network'
+
+
 train_c = command_get_func(lambda obj, kwargs: obj.train_competitive(**kwargs))
 train_n = command_get_func(lambda obj, kwargs: obj.train_neighborhood(**kwargs))
 train_bp = command_get_func(lambda obj, kwargs: backpropagation.train_backward(obj, **kwargs))

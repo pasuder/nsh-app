@@ -72,24 +72,21 @@ def neighborhood(learning_rate, measurement, neighborhood_radius):
                              'Neighborhood learning mode for Kohonen network')
 
 
-import mpmath
-
-
 def backward(learning_rate):
-    def train_bp_neuron(neuron, error, iteration, signal):
-        # Ugly!
-        derivative = mpmath.diff(neuron.activation_func, error)
-        print str(derivative) + ', ' + str(error) + ', ' + str(neuron.activation_func(error))
-        neuron.weights = map(lambda val: val + learning_rate(iteration) * error * derivative * signal, neuron.weights)
+    def train_bp_neuron(neuron, error, iteration, signals):
+        # Ugly! derivative = mpmath.diff(neuron.activation_func, error)
+        neuron.weights = map(lambda val: val[0] + learning_rate(iteration) * error * val[1],
+                             zip(neuron.weights, signals))
 
-    def train_bp_layer(layer, errors, iteration, signals):
-        map(lambda val: train_bp_neuron(val[0], val[1], iteration, val[2]), zip(layer.neurons, errors, signals))
+    def train_bp_layer(layer, errors_per_neuron, iteration, signals):
+        map(lambda val: train_bp_neuron(val[0], val[1], iteration, signals), zip(layer.neurons, errors_per_neuron))
 
-    def train_bp_network(network, target, iteration, signal):
-        errors = compute_error_on_network(network, signal, target)
+    def train_bp_network(network, target, iteration, signals):
+        errors_per_layer = compute_error_on_network(network, signals, target)
         for layer in network.layers:
-            map(lambda val: train_bp_layer(val[0], val[1], iteration, signal), zip(network.layers, errors[1:]))
-            signal = layer.compute(signal)
+            new_signal = layer.compute(signals)
+            map(lambda error: train_bp_layer(layer, error, iteration, signals), errors_per_layer[1:])
+            signals = new_signal
 
     return function.Function(train_bp_network,
                              'learning.backward',

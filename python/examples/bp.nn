@@ -1,12 +1,12 @@
 ## Creating BP network
-new_neuron      BPNeuron11 linear,0.7,0.2 0.0 0.0 0
-new_neuron      BPNeuron12 linear,0.7,0.2 0.0 0.0 0
+new_neuron      BPNeuron11 sigmoid_bipolar 0.0 0.0 0
+new_neuron      BPNeuron12 sigmoid_bipolar 0.0 0.0 0
 
-new_neuron      BPNeuron21 linear,0.7,0.2 0.0,0.0 0.0 0
-new_neuron      BPNeuron22 linear,0.7,0.2 0.0,0.0 0.0 0
-new_neuron      BPNeuron23 linear,0.7,0.2 0.0,0.0 0.0 0
+new_neuron      BPNeuron21 sigmoid_bipolar 0.0,0.0 0.0 0
+new_neuron      BPNeuron22 sigmoid_bipolar 0.0,0.0 0.0 0
+new_neuron      BPNeuron23 sigmoid_bipolar 0.0,0.0 0.0 0
 
-new_neuron      BPNeuron31 linear,0.7,0.2 0.0,0.0,0.0 0.0
+new_neuron      BPNeuron31 sigmoid_bipolar 0.0,0.0,0.0 0.0
 
 new_layer       BPLayer1 BPNeuron11,BPNeuron12
 new_layer       BPLayer2 BPNeuron21,BPNeuron22,BPNeuron23
@@ -18,8 +18,8 @@ init            TestBP 0.0 1.0
 
 show            TestBP
 
-compute_error   TestBP 0.123,0.456 0.2
+compute_error_normalize TestBP 0.123,0.456 0.2
 
-train_bp        TestBP linear,0.7,0.2 10 0.123,0.456 0.2
+train_bp        TestBP const,0.7 5000 0.123,0.456 0.2
 
 show            TestBP

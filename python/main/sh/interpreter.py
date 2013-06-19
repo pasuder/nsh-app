@@ -161,6 +161,14 @@ commands = {
             ('values', parser.parse_floats)
         ]
     },
+    'compute_error_normalize': {
+        'function': command.compute_error_normalize,
+        'params': [
+            ('name', parser.parse_string),
+            ('values', parser.parse_floats),
+            ('targets', parser.parse_floats)
+        ]
+    },
     'load': {
         'function': command.load,
         'params': [
