@@ -7,13 +7,13 @@ from main.trainer import counterpropagation
 
 
 class CounterPropagation(Kohonen):
-    def __init__(self, input_func=None, kohonen_func=None, grossberg_func=None, inputs=1, outputs=1, width=1, height=1):
+    def __init__(self, kohonen_func=None, grossberg_func=None, inputs=1, outputs=1, width=1, height=1):
         # create Grossberg output layer
         grossberg_layer = [Neuron(activation_func=grossberg_func, weights=[1.0] * width * height)
                            for _ in xrange(outputs)]
 
         # initialize Kohonen network
-        super(CounterPropagation, self).__init__(input_func, kohonen_func, inputs, width, height,
+        super(CounterPropagation, self).__init__(kohonen_func, inputs, width, height,
                                                  [Layer(grossberg_layer)])
 
     def train_competitive(self, **kwargs):

@@ -37,11 +37,12 @@ def outstar(learning_rate):
     learning_rate       -- function to determine learning rate in next iteration
     """
 
-    def modify_weight(neuron, index, signals, iteration):
-        neuron[index] += learning_rate(iteration) * (neuron.compute(signals) - neuron[index])
+    def modify_weight(neuron, index, signal_from_winner, excepted, signals, iteration):
+        neuron[index] += learning_rate(iteration) * (neuron.compute(signals) - excepted) * signal_from_winner
 
-    def inner_func(neurons, index, signals, iteration):
-        map(lambda neuron: modify_weight(neuron, index, signals, iteration), neurons)
+    def inner_func(neurons, index, signal_from_winner, excepted_values, signals, iteration):
+        map(lambda val: modify_weight(val[0], index, signal_from_winner, val[1], signals, iteration),
+            zip(neurons, excepted_values))
 
     return function.Function(inner_func,
                              'learning.outstar',
@@ -60,13 +61,18 @@ def neighborhood(learning_rate, measurement, neighborhood_radius):
     neighborhood_radius -- neighborhood radius function
     """
 
-    def distance(neuron, winner, iteration):
+    def gauss_distance(neuron, winner, iteration):
         measure = measurement(neuron.location, winner.location)
         return math.exp(-(math.pow(measure, 2)) / (2 * math.pow(neighborhood_radius(iteration), 2)))
 
+    def rectangular_distance(neuron, winner, max_distance):
+        measure = measurement(neuron.location, winner.location)
+        return 1 if measure <= max_distance else 0
+
     def inner_func(neuron, winner, signals, iteration):
         neuron.weights = map(
-            lambda obj: obj[0] + learning_rate(iteration) * distance(neuron, winner, iteration) * (obj[1] - obj[0]),
+            lambda obj: obj[0] + learning_rate(iteration) * gauss_distance(neuron, winner, iteration) * (
+                obj[1] - obj[0]),
             zip(neuron.weights, signals))
 
     return function.Function(inner_func,
@@ -109,8 +115,8 @@ def backward_momentum(learning_rate, momentum_rate):
         old_weights = neuron.weights
         if hasattr(neuron, 'old_weights'):
             neuron.weights = map(
-                lambda val: val[0] + learning_rate(iteration) * error * derivative * momentum_rate(iteration) *
-                                     (val[0] - val[2]) * val[1],
+                lambda val: val[0] + learning_rate(iteration) * error * derivative * val[1] + momentum_rate(iteration) *
+                            (val[0] - val[2]),
                 zip(neuron.weights, signals, neuron.old_weights))
         else:
             neuron.weights = map(

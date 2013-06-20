@@ -1,3 +1,5 @@
+import math
+
 __author__ = 'paoolo'
 
 import mpmath
@@ -112,3 +114,14 @@ def gauss(a=1.0, b=1.0, c=1.0):
     return function.Function(lambda x: a * mpmath.e - (((x - b) ** 2) / div),
                              'activation.gauss',
                              'Gauss activation function')
+
+
+def tanh():
+    """
+    Return tanh activation function.
+
+    f(x) = tanh(x)
+    """
+    return function.Function(lambda x: math.tanh(x),
+                             'activation.tanh',
+                             'Tanh activation function')

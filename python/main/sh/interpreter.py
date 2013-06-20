@@ -78,7 +78,6 @@ commands = {
         'function': command.new_kohonen,
         'params': [
             ('name', parser.parse_string),
-            ('input_func', parser.parse_activation_func),
             ('kohonen_func', parser.parse_activation_func),
             ('inputs', parser.parse_int),
             ('width', parser.parse_int),
@@ -89,7 +88,6 @@ commands = {
         'function': command.new_cp,
         'params': [
             ('name', parser.parse_string),
-            ('input_func', parser.parse_activation_func),
             ('kohonen_func', parser.parse_activation_func),
             ('grossberg_func', parser.parse_activation_func),
             ('inputs', parser.parse_int),
@@ -206,7 +204,8 @@ commands = {
             ('kohonen_learning_rate', parser.parse_learning_rate_func),
             ('grossberg_learning_rate', parser.parse_learning_rate_func),
             ('iterations', parser.parse_int),
-            ('signals', parser.parse_signals)
+            ('signals', parser.parse_signals),
+            ('targets', parser.parse_signals)
         ]
     },
     'train_n_cp': {
@@ -218,7 +217,8 @@ commands = {
             ('neighborhood_radius', parser.parse_neighborhood_func),
             ('grossberg_learning_rate', parser.parse_learning_rate_func),
             ('iterations', parser.parse_int),
-            ('signals', parser.parse_signals)
+            ('signals', parser.parse_signals),
+            ('targets', parser.parse_signals)
         ]
     },
     'train_bp': {
@@ -263,6 +263,7 @@ commands = {
         'params': [
             ('name', parser.parse_string),
             ('signals', parser.parse_signals),
+            ('targets', parser.parse_signals),
             ('configs', parser.parse_configs_c_cp)
         ]
     },
@@ -271,6 +272,7 @@ commands = {
         'params': [
             ('name', parser.parse_string),
             ('signals', parser.parse_signals),
+            ('targets', parser.parse_signals),
             ('configs', parser.parse_configs_n_cp)
         ]
     },

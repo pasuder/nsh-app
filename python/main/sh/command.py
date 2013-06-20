@@ -153,7 +153,9 @@ LEARNING_RATE = 'learning_rate'
 MOMENTUM_RATE = 'momentum_rate'
 MEASUREMENT = 'measurement'
 NEIGHBORHOOD_RADIUS = 'neighborhood_radius'
-GROSSBERG_PARAMETER = 'grossberg_parameter'
+
+KOHONEN_LEARNING_RATE = 'kohonen_learning_rate'
+GROSSBERG_LEARNING_RATE = 'grossberg_learning_rate'
 
 multi_train_c = multi_train(
     inner_func=lambda obj, kwargs: obj.train_competitive(**kwargs),
@@ -166,12 +168,12 @@ multi_train_n = multi_train(
 
 multi_train_c_cp = multi_train(
     inner_func=lambda obj, kwargs: obj.train_competitive(**kwargs),
-    params=[LEARNING_RATE, GROSSBERG_PARAMETER]
+    params=[KOHONEN_LEARNING_RATE, GROSSBERG_LEARNING_RATE]
 )
 
 multi_train_n_cp = multi_train(
     inner_func=lambda obj, kwargs: obj.train_neighborhood(**kwargs),
-    params=[LEARNING_RATE, MEASUREMENT, NEIGHBORHOOD_RADIUS, GROSSBERG_PARAMETER]
+    params=[KOHONEN_LEARNING_RATE, MEASUREMENT, NEIGHBORHOOD_RADIUS, GROSSBERG_LEARNING_RATE]
 )
 
 multi_train_bp = multi_train(
