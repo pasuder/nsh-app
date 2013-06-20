@@ -69,8 +69,8 @@ def parse_config_n_cp(line):
                    line.split(';')))
 
 
-parse_configs_c_cp = lambda val: map(parse_config_c, val.split('|'))
-parse_configs_n_cp = lambda val: map(parse_config_n, val.split('|'))
+parse_configs_c_cp = lambda val: map(parse_config_c_cp, val.split('|'))
+parse_configs_n_cp = lambda val: map(parse_config_n_cp, val.split('|'))
 
 
 def parse_config_bp(line):

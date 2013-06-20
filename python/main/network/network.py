@@ -207,8 +207,7 @@ class Network(object):
         values      -- one dimensional sequence of values
                        (default: None)
         """
-        values = map(lambda val: val[0].compute([val[1]]), zip(self.layers[0], values))
-        for layer in self.layers[1:]:
+        for layer in self.layers:
             values = layer.compute(values)
         return values
 

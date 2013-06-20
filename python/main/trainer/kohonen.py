@@ -13,11 +13,8 @@ def train_competitive(network, signals, iterations, learning_rate):
     for iteration in xrange(iterations):
         random.shuffle(signals)
         for signal in signals:
-            try:
-                winner = network[1].get_winners(signal)[0]
-                trainer(winner, signal, iteration)
-            except IndexError:
-                pass
+            winner = network[0].get_winners(signal)[0]
+            trainer(winner, signal, iteration)
 
 
 def train_neighborhood(network, signals, iterations, learning_rate, measurement, neighborhood_radius):
@@ -27,9 +24,6 @@ def train_neighborhood(network, signals, iterations, learning_rate, measurement,
     for iteration in xrange(iterations):
         random.shuffle(signals)
         for signal in signals:
-            try:
-                winner = network[1].get_winners(signal)[0]
-                for neuron in network[1]:
-                    trainer(neuron, winner, signal, iteration)
-            except IndexError:
-                pass
+            winner = network[0].get_winners(signal)[0]
+            for neuron in network[0]:
+                trainer(neuron, winner, signal, iteration)

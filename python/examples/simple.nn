@@ -13,6 +13,7 @@ echo Creating XOR network
 
 new_neuron      XOR_Hidden_1    sigmoid_bipolar      0.7827,0.7725   0.3666     0
 new_neuron      XOR_Hidden_2    sigmoid_bipolar      1.4412,1.3907  -1.5368     0
+
 new_neuron      XOR_Output_1    linear              -1.2556,1.3087   0.8297     0
 
 new_layer       XOR_Hidden      XOR_Hidden_1,XOR_Hidden_2
