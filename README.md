@@ -1,5 +1,9 @@
 # Nsh
 
+[![Code Climate](https://codeclimate.com/github/SuderPawel/nsh-app/badges/gpa.svg)](https://codeclimate.com/github/SuderPawel/nsh-app)
+[![Test Coverage](https://codeclimate.com/github/SuderPawel/nsh-app/badges/coverage.svg)](https://codeclimate.com/github/SuderPawel/nsh-app/coverage)
+[![Issue Count](https://codeclimate.com/github/SuderPawel/nsh-app/badges/issue_count.svg)](https://codeclimate.com/github/SuderPawel/nsh-app)
+
 Neural network app with shell and batch processing mode.
 
 ## What I need to have?
