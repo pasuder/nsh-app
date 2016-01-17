@@ -1,9 +1,11 @@
 # Nsh
 
+[![Codacy Badge](https://api.codacy.com/project/badge/grade/f11cf980b1ca4184bb3b7951314ab12b)](https://www.codacy.com/app/SuderPawel/nsh-app)
+[![Code Health](https://landscape.io/github/SuderPawel/nsh-app/master/landscape.svg?style=flat)](https://landscape.io/github/SuderPawel/nsh-app/master)
+
 [![Code Climate](https://codeclimate.com/github/SuderPawel/nsh-app/badges/gpa.svg)](https://codeclimate.com/github/SuderPawel/nsh-app)
 [![Test Coverage](https://codeclimate.com/github/SuderPawel/nsh-app/badges/coverage.svg)](https://codeclimate.com/github/SuderPawel/nsh-app/coverage)
 [![Issue Count](https://codeclimate.com/github/SuderPawel/nsh-app/badges/issue_count.svg)](https://codeclimate.com/github/SuderPawel/nsh-app)
-[![Code Health](https://landscape.io/github/SuderPawel/nsh-app/master/landscape.svg?style=flat)](https://landscape.io/github/SuderPawel/nsh-app/master)
 
 Neural network app with shell and batch processing mode.
 
