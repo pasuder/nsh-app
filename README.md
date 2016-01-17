@@ -3,6 +3,7 @@
 [![Code Climate](https://codeclimate.com/github/SuderPawel/nsh-app/badges/gpa.svg)](https://codeclimate.com/github/SuderPawel/nsh-app)
 [![Test Coverage](https://codeclimate.com/github/SuderPawel/nsh-app/badges/coverage.svg)](https://codeclimate.com/github/SuderPawel/nsh-app/coverage)
 [![Issue Count](https://codeclimate.com/github/SuderPawel/nsh-app/badges/issue_count.svg)](https://codeclimate.com/github/SuderPawel/nsh-app)
+[![Code Health](https://landscape.io/github/SuderPawel/nsh-app/master/landscape.svg?style=flat)](https://landscape.io/github/SuderPawel/nsh-app/master)
 
 Neural network app with shell and batch processing mode.
 
