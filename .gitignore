@@ -44,3 +44,4 @@ nosetests.xml
 .pydevproject
 
 out/
+__envi/
