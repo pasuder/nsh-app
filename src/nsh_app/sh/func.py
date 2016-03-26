@@ -1,6 +1,6 @@
 __author__ = 'paoolo'
 
-from main.function import activation, learningrate, neighborhood, measures
+from nsh_app.function import activation, learningrate, neighborhood, measures
 
 ACTIVATION_FUNC = {'linear': activation.linear,
                    'linear_cut': activation.linear_cut,

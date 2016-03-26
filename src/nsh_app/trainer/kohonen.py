@@ -2,8 +2,8 @@ __author__ = 'paoolo'
 
 import random
 
-from main.tools.function import normalize
-from main.function.trainer import instar, neighborhood
+from nsh_app.function.trainer import instar, neighborhood
+from nsh_app.tools.function import normalize
 
 
 def train_competitive(network, signals, iterations, learning_rate):

@@ -1,9 +1,8 @@
 __author__ = 'paoolo'
 
 from kohonen import Kohonen
+from nsh_app.trainer import counterpropagation
 from network import Layer, Neuron
-
-from main.trainer import counterpropagation
 
 
 class CounterPropagation(Kohonen):

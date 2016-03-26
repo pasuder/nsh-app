@@ -9,19 +9,96 @@
 
 Neural network app with shell and batch processing mode.
 
-## What I need to have?
 
-*   python
-*   python-mpmath
+## Requirements
 
-## How to run?
+* `python` with `pip` and `virtualenv`
 
-1.  Download this as zip or by cloning repo
-2.  Extract archive (if you have downloaded) and change directory to ``./python/``
-3.  Type ``$ ./main.py``
-4.  Prompt shell will be shown
+## How to deploy
 
-If you want to use batch processing mode, type ``$(PROJECT_ROOT)/python/main.py -f path/to/file``.
+* Clone this project.
+* Create python virtual environment using `bin/install.sh`
+* Import project to your favorite IDE.
+
+## How to use (PyPi)
+
+Simply. Add to `requirements.txt`
+
+    -e git+git://github.com/SuderPawel/nsh-app#egg=nsh-app
+
+You can install it by python-installer
+
+    pip install -e git+git://github.com/SuderPawel/nsh-app#egg=nsh-app
+
+## How to run
+
+After successful clone and install steps, in directory of this repository type `bin/main.sh`
+
+    (local) ➜  nsh-app git:(master)  bin/main.sh     
+    Neuronal (shell)
+    nsh> help
+    Command "help" not found.
+    Available commands:
+            compute
+            compute_error
+            compute_error_normalize
+            compute_normalize
+            init
+            init_bias
+            load
+            locate
+            multi_train_bp
+            multi_train_bp_m
+            multi_train_c
+            multi_train_c_cp
+            multi_train_n
+            multi_train_n_cp
+            new_cp
+            new_kohonen
+            new_layer
+            new_network
+            new_neuron
+            show
+            show_all
+            train_bp
+            train_bp_m
+            train_c
+            train_c_cp
+            train_n
+            train_n_cp
+            zero
+            zero_bias
+
+
+Close by `[ctrl]+[c]`.
+
+    nsh> ^C Ouch...
+    Bye!
+
+Commands used in shell and in batch mode described below in **Features**.
+
+Application can be also run in batch mode:
+
+    (local) ➜  nsh-app git:(master)  bin/main.sh -f examples/bp.nn
+    Neuronal (batch)
+    Creating BP network
+    ---
+    Testing back-propagation
+    ...
+    
+    (local) ➜  nsh-app git:(master)  bin/main.sh --file=examples/bp.nn
+    Neuronal (batch)
+    Creating BP network
+    ---
+    Testing back-propagation
+    ...
+
+
+## How to contribute
+
+Clone this repo, setup your environment using `bin/install.sh`. Change what you want to change and make pull request.
+
+# Features
 
 ## Activation function
 

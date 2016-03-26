@@ -3,12 +3,11 @@ __author__ = 'paoolo'
 import re
 
 from interpreter import ENVIRONMENT, interpret
-
-from main.network.network import Neuron, Layer, Network
-from main.network.kohonen import Kohonen
-from main.network.counterpropagation import CounterPropagation
-from main.network.backpropagation import compute_error_on_network
-from main.trainer import backpropagation
+from nsh_app.network.backpropagation import compute_error_on_network
+from nsh_app.network.counterpropagation import CounterPropagation
+from nsh_app.network.kohonen import Kohonen
+from nsh_app.network.network import Neuron, Layer, Network
+from nsh_app.trainer import backpropagation
 
 
 def show_all():
@@ -82,7 +81,7 @@ def compute(**kwargs):
           + '\n\tis ' + str(ENVIRONMENT[name].compute(**kwargs))
 
 
-from main.tools.function import normalize
+from nsh_app.tools.function import normalize
 
 
 def compute_error(**kwargs):
@@ -104,7 +103,7 @@ def compute_normalize(**kwargs):
     del kwargs['name']
     kwargs['values'] = normalize(kwargs['values'])
     print 'Computation of ' + name + '\n\tfor normalized values ' + str(kwargs['values']) + '\n\tis ' + str(
-        ENVIRONMENT[name].compute(**kwargs))
+            ENVIRONMENT[name].compute(**kwargs))
 
 
 def compute_error_normalize(**kwargs):
@@ -158,30 +157,30 @@ KOHONEN_LEARNING_RATE = 'kohonen_learning_rate'
 GROSSBERG_LEARNING_RATE = 'grossberg_learning_rate'
 
 multi_train_c = multi_train(
-    inner_func=lambda obj, kwargs: obj.train_competitive(**kwargs),
-    params=[LEARNING_RATE])
+        inner_func=lambda obj, kwargs: obj.train_competitive(**kwargs),
+        params=[LEARNING_RATE])
 
 multi_train_n = multi_train(
-    inner_func=lambda obj, kwargs: obj.train_neighborhood(**kwargs),
-    params=[LEARNING_RATE, MEASUREMENT, NEIGHBORHOOD_RADIUS]
+        inner_func=lambda obj, kwargs: obj.train_neighborhood(**kwargs),
+        params=[LEARNING_RATE, MEASUREMENT, NEIGHBORHOOD_RADIUS]
 )
 
 multi_train_c_cp = multi_train(
-    inner_func=lambda obj, kwargs: obj.train_competitive(**kwargs),
-    params=[KOHONEN_LEARNING_RATE, GROSSBERG_LEARNING_RATE]
+        inner_func=lambda obj, kwargs: obj.train_competitive(**kwargs),
+        params=[KOHONEN_LEARNING_RATE, GROSSBERG_LEARNING_RATE]
 )
 
 multi_train_n_cp = multi_train(
-    inner_func=lambda obj, kwargs: obj.train_neighborhood(**kwargs),
-    params=[KOHONEN_LEARNING_RATE, MEASUREMENT, NEIGHBORHOOD_RADIUS, GROSSBERG_LEARNING_RATE]
+        inner_func=lambda obj, kwargs: obj.train_neighborhood(**kwargs),
+        params=[KOHONEN_LEARNING_RATE, MEASUREMENT, NEIGHBORHOOD_RADIUS, GROSSBERG_LEARNING_RATE]
 )
 
 multi_train_bp = multi_train(
-    inner_func=lambda obj, kwargs: backpropagation.train_backward(obj, **kwargs),
-    params=[LEARNING_RATE]
+        inner_func=lambda obj, kwargs: backpropagation.train_backward(obj, **kwargs),
+        params=[LEARNING_RATE]
 )
 
 multi_train_bp_m = multi_train(
-    inner_func=lambda obj, kwargs: backpropagation.train_backward_momentum(obj, **kwargs),
-    params=[LEARNING_RATE, MOMENTUM_RATE]
+        inner_func=lambda obj, kwargs: backpropagation.train_backward_momentum(obj, **kwargs),
+        params=[LEARNING_RATE, MOMENTUM_RATE]
 )

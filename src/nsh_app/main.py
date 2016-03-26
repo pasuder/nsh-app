@@ -1,12 +1,11 @@
-#!/usr/bin/python
-import re
-
-__author__ = 'paoolo'
-
 import getopt
 import sys
 
-from main.sh import interpreter
+import re
+
+from nsh_app.sh import interpreter
+
+__author__ = 'paoolo'
 
 
 def shell():
@@ -47,7 +46,7 @@ if __name__ == '__main__':
                 usage()
                 sys.exit()
             elif o in ('-f', '--file'):
-                source = open(a)
+                source = open(a.strip())
             else:
                 assert False, 'unhandled option'
 

@@ -2,7 +2,7 @@ __author__ = 'paoolo'
 
 import math
 
-from main.tools import function
+from nsh_app.tools import function
 
 
 def const(value=1.0):
@@ -61,9 +61,9 @@ def exponential(max_iteration=1.0, min_transition=1.0, initial_rate=1.0):
     initial_rate    -- initial value for learning rate
     """
     return function.Function(
-        lambda iteration: initial_rate * math.pow(min_transition / initial_rate, iteration / max_iteration),
-        'learningrate.exponential',
-        'Exponential learning rate function')
+            lambda iteration: initial_rate * math.pow(min_transition / initial_rate, iteration / max_iteration),
+            'learningrate.exponential',
+            'Exponential learning rate function')
 
 
 def kohonen(alpha=0.1, beta=0.1):

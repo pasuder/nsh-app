@@ -12,10 +12,9 @@ def get_func(func_dict):
 
 
 from const import HELP_TEXT
-from func import ACTIVATION_FUNC, LEARNING_RATE_FUNC, NEIGHBORHOOD_FUNC, MEASUREMENT_FUNC
 from error_handlers import key_error_handler, value_error_handler, io_error_handler
+from func import ACTIVATION_FUNC, LEARNING_RATE_FUNC, NEIGHBORHOOD_FUNC, MEASUREMENT_FUNC
 from interpreter import ENVIRONMENT
-
 
 parse_activation_func = key_error_handler(get_func(ACTIVATION_FUNC), HELP_TEXT['activation_func'])
 parse_learning_rate_func = key_error_handler(get_func(LEARNING_RATE_FUNC), HELP_TEXT['learning_rate_func'])

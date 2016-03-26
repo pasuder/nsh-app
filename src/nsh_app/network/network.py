@@ -1,10 +1,10 @@
 __author__ = 'paoolo'
 
-import random
 import math
+import random
 
-from main.tools import decorators
-from main.function.activation import linear
+from nsh_app.function.activation import linear
+from nsh_app.tools import decorators
 
 
 class Neuron(object):
@@ -86,7 +86,7 @@ class Neuron(object):
 
     def __str__(self):
         return 'Neuron(' + str(self.activation_func) + ', weights=' + str(self.weights) + ', bias=' + str(
-            self.bias) + ', location=' + str(self.location) + ')'
+                self.bias) + ', location=' + str(self.location) + ')'
 
     def __getitem__(self, item):
         return self.weights[item]

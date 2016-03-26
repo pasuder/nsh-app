@@ -4,8 +4,8 @@ __author__ = 'paoolo'
 
 import math
 
-from main.tools import function
-from main.network.backpropagation import compute_error_on_network
+from nsh_app.tools import function
+from nsh_app.network.backpropagation import compute_error_on_network
 
 
 def instar(learning_rate):
@@ -71,9 +71,9 @@ def neighborhood(learning_rate, measurement, neighborhood_radius):
 
     def inner_func(neuron, winner, signals, iteration):
         neuron.weights = map(
-            lambda obj: obj[0] + learning_rate(iteration) * gauss_distance(neuron, winner, iteration) * (
-                obj[1] - obj[0]),
-            zip(neuron.weights, signals))
+                lambda obj: obj[0] + learning_rate(iteration) * gauss_distance(neuron, winner, iteration) * (
+                    obj[1] - obj[0]),
+                zip(neuron.weights, signals))
 
     return function.Function(inner_func,
                              'learning.neighborhood',
@@ -115,13 +115,14 @@ def backward_momentum(learning_rate, momentum_rate):
         old_weights = neuron.weights
         if hasattr(neuron, 'old_weights'):
             neuron.weights = map(
-                lambda val: val[0] + learning_rate(iteration) * error * derivative * val[1] + momentum_rate(iteration) *
-                            (val[0] - val[2]),
-                zip(neuron.weights, signals, neuron.old_weights))
+                    lambda val: val[0] + learning_rate(iteration) * error * derivative * val[1] + momentum_rate(
+                        iteration) *
+                                                                                                  (val[0] - val[2]),
+                    zip(neuron.weights, signals, neuron.old_weights))
         else:
             neuron.weights = map(
-                lambda val: val[0] + learning_rate(iteration) * error * derivative * val[1],
-                zip(neuron.weights, signals))
+                    lambda val: val[0] + learning_rate(iteration) * error * derivative * val[1],
+                    zip(neuron.weights, signals))
         neuron.old_weights = old_weights
 
     return function.Function(get_train_bp_network(train_bp_neuron),

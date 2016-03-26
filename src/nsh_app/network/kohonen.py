@@ -1,8 +1,7 @@
 __author__ = 'paoolo'
 
+from nsh_app.trainer import kohonen
 from network import Network, Layer, Neuron
-
-from main.trainer import kohonen
 
 
 class Kohonen(Network):
@@ -21,7 +20,7 @@ class Kohonen(Network):
 
         # initialize network with Kohonen layers
         super(Kohonen, self).__init__(
-            [Layer(kohonen_layer)] + ([] if output_layers is None else output_layers))
+                [Layer(kohonen_layer)] + ([] if output_layers is None else output_layers))
 
     def train_competitive(self, **kwargs):
         kohonen.train_competitive(self, **kwargs)

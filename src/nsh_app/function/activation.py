@@ -4,7 +4,7 @@ __author__ = 'paoolo'
 
 import mpmath
 
-from main.tools import function
+from nsh_app.tools import function
 
 
 def linear(a=1.0, b=0.0):

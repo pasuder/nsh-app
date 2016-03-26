@@ -1,9 +1,10 @@
 import random
-from main.tools.function import normalize
+
+from nsh_app.tools.function import normalize
 
 __author__ = 'paoolo'
 
-from main.function.trainer import backward, backward_momentum
+from nsh_app.function.trainer import backward, backward_momentum
 
 
 def train_backward(network, signals, targets, iterations, learning_rate):

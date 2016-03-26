@@ -1,5 +1,6 @@
-import re
 import traceback
+
+import re
 
 __author__ = 'paoolo'
 
@@ -42,12 +43,11 @@ def interpret(line):
             except KeyError as e:
                 # traceback.print_exc()
                 print 'Command "' + str(e.message) + '" not found.\nAvailable commands:\n\t%s' % reduce(
-                    lambda acc, val: acc + '\n\t' + val, sorted(commands))
+                        lambda acc, val: acc + '\n\t' + val, sorted(commands))
 
 
 import command
 import parser
-
 
 commands = {
     'new_neuron': {
