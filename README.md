@@ -1,11 +1,11 @@
 # Nsh
 
-[![Codacy Badge](https://api.codacy.com/project/badge/grade/f11cf980b1ca4184bb3b7951314ab12b)](https://www.codacy.com/app/SuderPawel/nsh-app)
-[![Code Health](https://landscape.io/github/SuderPawel/nsh-app/master/landscape.svg?style=flat)](https://landscape.io/github/SuderPawel/nsh-app/master)
+[![Codacy Badge](https://api.codacy.com/project/badge/grade/f11cf980b1ca4184bb3b7951314ab12b)](https://www.codacy.com/app/pasuder/nsh-app)
+[![Code Health](https://landscape.io/github/pasuder/nsh-app/master/landscape.svg?style=flat)](https://landscape.io/github/pasuder/nsh-app/master)
 
-[![Code Climate](https://codeclimate.com/github/SuderPawel/nsh-app/badges/gpa.svg)](https://codeclimate.com/github/SuderPawel/nsh-app)
-[![Test Coverage](https://codeclimate.com/github/SuderPawel/nsh-app/badges/coverage.svg)](https://codeclimate.com/github/SuderPawel/nsh-app/coverage)
-[![Issue Count](https://codeclimate.com/github/SuderPawel/nsh-app/badges/issue_count.svg)](https://codeclimate.com/github/SuderPawel/nsh-app)
+[![Code Climate](https://codeclimate.com/github/pasuder/nsh-app/badges/gpa.svg)](https://codeclimate.com/github/pasuder/nsh-app)
+[![Test Coverage](https://codeclimate.com/github/pasuder/nsh-app/badges/coverage.svg)](https://codeclimate.com/github/pasuder/nsh-app/coverage)
+[![Issue Count](https://codeclimate.com/github/pasuder/nsh-app/badges/issue_count.svg)](https://codeclimate.com/github/pasuder/nsh-app)
 
 Neural network app with shell and batch processing mode.
 
@@ -24,11 +24,11 @@ Neural network app with shell and batch processing mode.
 
 Simply. Add to `requirements.txt`
 
-    -e git+git://github.com/SuderPawel/nsh-app#egg=nsh-app
+    -e git+git://github.com/pasuder/nsh-app#egg=nsh-app
 
 You can install it by python-installer
 
-    pip install -e git+git://github.com/SuderPawel/nsh-app#egg=nsh-app
+    pip install -e git+git://github.com/pasuder/nsh-app#egg=nsh-app
 
 ## How to run
 
